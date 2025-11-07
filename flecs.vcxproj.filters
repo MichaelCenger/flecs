@@ -1,0 +1,888 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\alerts.c">
+      <Filter>src\addons</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\app.c">
+      <Filter>src\addons</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\doc.c">
+      <Filter>src\addons</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\flecs_cpp.c">
+      <Filter>src\addons</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\http.c">
+      <Filter>src\addons</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\journal.c">
+      <Filter>src\addons</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\json\deserialize.c">
+      <Filter>src\addons\json</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\json\deserialize_value.c">
+      <Filter>src\addons\json</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\json\json.c">
+      <Filter>src\addons\json</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\json\serialize_entity.c">
+      <Filter>src\addons\json</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\json\serialize_field_info.c">
+      <Filter>src\addons\json</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\json\serialize_iter.c">
+      <Filter>src\addons\json</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\json\serialize_iter_result.c">
+      <Filter>src\addons\json</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\json\serialize_iter_result_query.c">
+      <Filter>src\addons\json</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\json\serialize_iter_result_table.c">
+      <Filter>src\addons\json</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\json\serialize_query_info.c">
+      <Filter>src\addons\json</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\json\serialize_type_info.c">
+      <Filter>src\addons\json</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\json\serialize_value.c">
+      <Filter>src\addons\json</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\json\serialize_world.c">
+      <Filter>src\addons\json</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\log.c">
+      <Filter>src\addons</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\meta\api.c">
+      <Filter>src\addons\meta</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\meta\c_utils.c">
+      <Filter>src\addons\meta</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\meta\cursor.c">
+      <Filter>src\addons\meta</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\meta\definitions.c">
+      <Filter>src\addons\meta</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\meta\meta.c">
+      <Filter>src\addons\meta</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\meta\rtt_lifecycle.c">
+      <Filter>src\addons\meta</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\meta\serialized.c">
+      <Filter>src\addons\meta</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\metrics.c">
+      <Filter>src\addons</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\module.c">
+      <Filter>src\addons</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\os_api_impl\os_api_impl.c">
+      <Filter>src\addons\os_api_impl</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\pipeline\pipeline.c">
+      <Filter>src\addons\pipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\pipeline\worker.c">
+      <Filter>src\addons\pipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\rest.c">
+      <Filter>src\addons</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\script\ast.c">
+      <Filter>src\addons\script</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\script\expr\ast.c">
+      <Filter>src\addons\script\expr</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\script\expr\parser.c">
+      <Filter>src\addons\script\expr</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\script\expr\stack.c">
+      <Filter>src\addons\script\expr</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\script\expr\util.c">
+      <Filter>src\addons\script\expr</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\script\expr\visit_eval.c">
+      <Filter>src\addons\script\expr</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\script\expr\visit_fold.c">
+      <Filter>src\addons\script\expr</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\script\expr\visit_free.c">
+      <Filter>src\addons\script\expr</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\script\expr\visit_to_str.c">
+      <Filter>src\addons\script\expr</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\script\expr\visit_type.c">
+      <Filter>src\addons\script\expr</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\script\function.c">
+      <Filter>src\addons\script</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\script\functions_builtin.c">
+      <Filter>src\addons\script</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\script\functions_math.c">
+      <Filter>src\addons\script</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\script\parser.c">
+      <Filter>src\addons\script</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\script\query_parser.c">
+      <Filter>src\addons\script</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\script\script.c">
+      <Filter>src\addons\script</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\script\serialize.c">
+      <Filter>src\addons\script</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\script\template.c">
+      <Filter>src\addons\script</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\script\tokenizer.c">
+      <Filter>src\addons\script</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\script\vars.c">
+      <Filter>src\addons\script</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\script\visit.c">
+      <Filter>src\addons\script</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\script\visit_check.c">
+      <Filter>src\addons\script</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\script\visit_eval.c">
+      <Filter>src\addons\script</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\script\visit_free.c">
+      <Filter>src\addons\script</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\script\visit_to_str.c">
+      <Filter>src\addons\script</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\stats\monitor.c">
+      <Filter>src\addons\stats</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\stats\pipeline_monitor.c">
+      <Filter>src\addons\stats</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\stats\stats.c">
+      <Filter>src\addons\stats</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\stats\system_monitor.c">
+      <Filter>src\addons\stats</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\stats\world_monitor.c">
+      <Filter>src\addons\stats</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\stats\world_summary.c">
+      <Filter>src\addons\stats</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\system\system.c">
+      <Filter>src\addons\system</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\timer.c">
+      <Filter>src\addons</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\addons\units.c">
+      <Filter>src\addons</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\bootstrap.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\datastructures\allocator.c">
+      <Filter>src\datastructures</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\datastructures\bitset.c">
+      <Filter>src\datastructures</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\datastructures\block_allocator.c">
+      <Filter>src\datastructures</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\datastructures\hash.c">
+      <Filter>src\datastructures</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\datastructures\hashmap.c">
+      <Filter>src\datastructures</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\datastructures\map.c">
+      <Filter>src\datastructures</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\datastructures\name_index.c">
+      <Filter>src\datastructures</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\datastructures\sparse.c">
+      <Filter>src\datastructures</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\datastructures\stack_allocator.c">
+      <Filter>src\datastructures</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\datastructures\strbuf.c">
+      <Filter>src\datastructures</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\datastructures\switch_list.c">
+      <Filter>src\datastructures</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\datastructures\vec.c">
+      <Filter>src\datastructures</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\each.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\entity.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\entity_name.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\id.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\iter.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\misc.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\observable.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\observer.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\os_api.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\poly.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\query\api.c">
+      <Filter>src\query</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\query\compiler\compiler.c">
+      <Filter>src\query\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\query\compiler\compiler_term.c">
+      <Filter>src\query\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\query\engine\cache.c">
+      <Filter>src\query\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\query\engine\cache_iter.c">
+      <Filter>src\query\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\query\engine\cache_order_by.c">
+      <Filter>src\query\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\query\engine\change_detection.c">
+      <Filter>src\query\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\query\engine\eval.c">
+      <Filter>src\query\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\query\engine\eval_iter.c">
+      <Filter>src\query\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\query\engine\eval_member.c">
+      <Filter>src\query\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\query\engine\eval_pred.c">
+      <Filter>src\query\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\query\engine\eval_toggle.c">
+      <Filter>src\query\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\query\engine\eval_trav.c">
+      <Filter>src\query\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\query\engine\eval_union.c">
+      <Filter>src\query\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\query\engine\eval_up.c">
+      <Filter>src\query\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\query\engine\eval_utils.c">
+      <Filter>src\query\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\query\engine\trav_cache.c">
+      <Filter>src\query\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\query\engine\trav_down_cache.c">
+      <Filter>src\query\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\query\engine\trav_up_cache.c">
+      <Filter>src\query\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\query\engine\trivial_iter.c">
+      <Filter>src\query\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\query\util.c">
+      <Filter>src\query</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\query\validator.c">
+      <Filter>src\query</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\search.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\stage.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\storage\entity_index.c">
+      <Filter>src\storage</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\storage\id_index.c">
+      <Filter>src\storage</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\storage\table.c">
+      <Filter>src\storage</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\storage\table_cache.c">
+      <Filter>src\storage</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\storage\table_graph.c">
+      <Filter>src\storage</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\value.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\src\world.c">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\alerts.h">
+      <Filter>include\flecs\addons</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\app.h">
+      <Filter>include\flecs\addons</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\c_types.hpp">
+      <Filter>include\flecs\addons\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\component.hpp">
+      <Filter>include\flecs\addons\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\delegate.hpp">
+      <Filter>include\flecs\addons\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\entity.hpp">
+      <Filter>include\flecs\addons\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\entity_view.hpp">
+      <Filter>include\flecs\addons\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\field.hpp">
+      <Filter>include\flecs\addons\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\flecs.hpp">
+      <Filter>include\flecs\addons\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\impl\field.hpp">
+      <Filter>include\flecs\addons\cpp\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\impl\iter.hpp">
+      <Filter>include\flecs\addons\cpp\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\impl\world.hpp">
+      <Filter>include\flecs\addons\cpp\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\iter.hpp">
+      <Filter>include\flecs\addons\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\lifecycle_traits.hpp">
+      <Filter>include\flecs\addons\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\log.hpp">
+      <Filter>include\flecs\addons\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\alerts\builder.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\alerts</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\alerts\builder_i.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\alerts</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\alerts\decl.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\alerts</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\alerts\impl.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\alerts</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\app\builder.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\app</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\app\decl.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\app</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\component\impl.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\component</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\doc\decl.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\doc</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\doc\impl.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\doc</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\entity\builder.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\entity</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\entity\impl.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\entity</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\enum\impl.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\enum</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\event\builder.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\event</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\event\decl.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\event</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\event\impl.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\event</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\id\decl.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\id</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\id\impl.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\id</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\json\decl.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\json</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\meta\cursor.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\meta</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\meta\decl.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\meta</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\meta\impl.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\meta</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\meta\opaque.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\meta</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\metrics\builder.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\metrics</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\metrics\decl.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\metrics</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\metrics\impl.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\metrics</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\module\impl.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\module</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\observer\builder.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\observer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\observer\builder_i.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\observer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\observer\decl.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\observer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\observer\impl.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\observer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\pipeline\builder.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\pipeline\builder_i.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\pipeline\decl.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\pipeline\impl.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\query\builder.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\query</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\query\builder_i.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\query</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\query\decl.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\query</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\query\impl.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\query</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\rest\decl.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\rest</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\rest\impl.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\rest</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\script\builder.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\script</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\script\decl.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\script</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\script\impl.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\script</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\stats\decl.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\stats</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\stats\impl.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\stats</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\system\builder.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\system</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\system\builder_i.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\system</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\system\decl.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\system</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\system\impl.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\system</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\term\builder_i.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\term</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\term\decl.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\term</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\term\impl.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\term</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\timer\decl.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\timer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\timer\impl.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\timer</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\units\decl.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\units</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\mixins\units\impl.hpp">
+      <Filter>include\flecs\addons\cpp\mixins\units</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\pair.hpp">
+      <Filter>include\flecs\addons\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\ref.hpp">
+      <Filter>include\flecs\addons\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\table.hpp">
+      <Filter>include\flecs\addons\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\type.hpp">
+      <Filter>include\flecs\addons\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\utils\array.hpp">
+      <Filter>include\flecs\addons\cpp\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\utils\builder.hpp">
+      <Filter>include\flecs\addons\cpp\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\utils\enum.hpp">
+      <Filter>include\flecs\addons\cpp\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\utils\function_traits.hpp">
+      <Filter>include\flecs\addons\cpp\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\utils\iterable.hpp">
+      <Filter>include\flecs\addons\cpp\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\utils\node_builder.hpp">
+      <Filter>include\flecs\addons\cpp\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\utils\signature.hpp">
+      <Filter>include\flecs\addons\cpp\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\utils\string.hpp">
+      <Filter>include\flecs\addons\cpp\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\utils\stringstream.hpp">
+      <Filter>include\flecs\addons\cpp\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\utils\utils.hpp">
+      <Filter>include\flecs\addons\cpp\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\cpp\world.hpp">
+      <Filter>include\flecs\addons\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\deprecated.h">
+      <Filter>include\flecs\addons</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\doc.h">
+      <Filter>include\flecs\addons</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\flecs_c.h">
+      <Filter>include\flecs\addons</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\flecs_cpp.h">
+      <Filter>include\flecs\addons</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\http.h">
+      <Filter>include\flecs\addons</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\json.h">
+      <Filter>include\flecs\addons</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\log.h">
+      <Filter>include\flecs\addons</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\meta.h">
+      <Filter>include\flecs\addons</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\meta_c.h">
+      <Filter>include\flecs\addons</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\metrics.h">
+      <Filter>include\flecs\addons</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\module.h">
+      <Filter>include\flecs\addons</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\pipeline.h">
+      <Filter>include\flecs\addons</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\rest.h">
+      <Filter>include\flecs\addons</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\script.h">
+      <Filter>include\flecs\addons</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\script_math.h">
+      <Filter>include\flecs\addons</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\stats.h">
+      <Filter>include\flecs\addons</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\system.h">
+      <Filter>include\flecs\addons</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\timer.h">
+      <Filter>include\flecs\addons</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\addons\units.h">
+      <Filter>include\flecs\addons</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\bake_config.h">
+      <Filter>include\flecs</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\datastructures\allocator.h">
+      <Filter>include\flecs\datastructures</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\datastructures\bitset.h">
+      <Filter>include\flecs\datastructures</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\datastructures\block_allocator.h">
+      <Filter>include\flecs\datastructures</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\datastructures\hashmap.h">
+      <Filter>include\flecs\datastructures</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\datastructures\map.h">
+      <Filter>include\flecs\datastructures</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\datastructures\sparse.h">
+      <Filter>include\flecs\datastructures</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\datastructures\stack_allocator.h">
+      <Filter>include\flecs\datastructures</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\datastructures\strbuf.h">
+      <Filter>include\flecs\datastructures</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\datastructures\switch_list.h">
+      <Filter>include\flecs\datastructures</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\datastructures\vec.h">
+      <Filter>include\flecs\datastructures</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\os_api.h">
+      <Filter>include\flecs</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\private\addons.h">
+      <Filter>include\flecs\private</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\private\api_defines.h">
+      <Filter>include\flecs\private</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\private\api_flags.h">
+      <Filter>include\flecs\private</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\private\api_support.h">
+      <Filter>include\flecs\private</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\private\api_types.h">
+      <Filter>include\flecs\private</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\private\journal.h">
+      <Filter>include\flecs\private</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\include\flecs\private\os_api_impl.h">
+      <Filter>include\flecs\private</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{8B934FA9-64B7-3C4E-B484-2D18A4E6AAEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\flecs">
+      <UniqueIdentifier>{6CB2563C-C7FF-3A29-862E-089C0A75F828}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\flecs\addons">
+      <UniqueIdentifier>{518A70C3-CF92-3C68-9B00-DBAFB8781FC2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\flecs\addons\cpp">
+      <UniqueIdentifier>{E5CF5880-DFF4-343D-8797-E5D56F5E001B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\flecs\addons\cpp\impl">
+      <UniqueIdentifier>{1AD97EC0-83D8-398A-A66A-EFE0D6C0B58A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\flecs\addons\cpp\mixins">
+      <UniqueIdentifier>{AFFB5C54-611E-32CC-B693-A7AAC041BDA1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\flecs\addons\cpp\mixins\alerts">
+      <UniqueIdentifier>{0D98FAD3-6256-3D2B-9252-A3DD4EF9BC5A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\flecs\addons\cpp\mixins\app">
+      <UniqueIdentifier>{857F4584-5A83-3D8F-9E36-21ABDA6F89D3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\flecs\addons\cpp\mixins\component">
+      <UniqueIdentifier>{59FAC786-793E-32EF-B15C-FAF1B7E48B3E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\flecs\addons\cpp\mixins\doc">
+      <UniqueIdentifier>{633C3040-4A6E-3F24-838A-0B7C736A3644}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\flecs\addons\cpp\mixins\entity">
+      <UniqueIdentifier>{AD88C226-431E-34D9-A458-3BEEAE84900A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\flecs\addons\cpp\mixins\enum">
+      <UniqueIdentifier>{595CADF3-66DE-315D-AB9A-5F7F02917709}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\flecs\addons\cpp\mixins\event">
+      <UniqueIdentifier>{45A01CC5-38D6-3EB8-A063-0A82F96DD7FF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\flecs\addons\cpp\mixins\id">
+      <UniqueIdentifier>{C4F8D9F8-3BA3-3AC7-8511-3116AF362AA6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\flecs\addons\cpp\mixins\json">
+      <UniqueIdentifier>{98940EA0-A16E-36A0-9FC0-947422D79ED6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\flecs\addons\cpp\mixins\meta">
+      <UniqueIdentifier>{975F76CD-8022-3A90-9FAB-A9E4FC97FA91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\flecs\addons\cpp\mixins\metrics">
+      <UniqueIdentifier>{C595E0A4-8AB5-3085-9B8C-97FCC40A3A3F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\flecs\addons\cpp\mixins\module">
+      <UniqueIdentifier>{93017E5D-AE2C-3C08-A51B-8A1CE2A05AE7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\flecs\addons\cpp\mixins\observer">
+      <UniqueIdentifier>{19BDE0A4-9C52-3A56-B884-FE950805D132}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\flecs\addons\cpp\mixins\pipeline">
+      <UniqueIdentifier>{13746065-6EA9-333D-AEC5-649D26A645B5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\flecs\addons\cpp\mixins\query">
+      <UniqueIdentifier>{1A0CB0D8-4705-3FAD-9874-AC4D8B51A906}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\flecs\addons\cpp\mixins\rest">
+      <UniqueIdentifier>{DA4BBD92-F383-34DF-842C-F0157F48DCE1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\flecs\addons\cpp\mixins\script">
+      <UniqueIdentifier>{3BB8483C-6F4A-319C-905B-0C8EBE422036}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\flecs\addons\cpp\mixins\stats">
+      <UniqueIdentifier>{927BDE23-744D-396B-A94C-2130D250E1FE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\flecs\addons\cpp\mixins\system">
+      <UniqueIdentifier>{29429124-32A1-3AF1-AE61-9B18DD97E8EB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\flecs\addons\cpp\mixins\term">
+      <UniqueIdentifier>{45BC679C-2E86-3A99-BBBB-FB91E2EC697A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\flecs\addons\cpp\mixins\timer">
+      <UniqueIdentifier>{14380299-EEEA-3135-87CD-C29148DB08DA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\flecs\addons\cpp\mixins\units">
+      <UniqueIdentifier>{69D065D4-71CA-33A8-A4DB-C9F75C2D929F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\flecs\addons\cpp\utils">
+      <UniqueIdentifier>{88A95C9A-2C8A-3B10-94EB-E2F62F97086E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\flecs\datastructures">
+      <UniqueIdentifier>{65AFD23C-0EAA-3476-8C06-CE4584B093C0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\flecs\private">
+      <UniqueIdentifier>{117EE3BC-3C03-374F-B6C6-0701AA8F4B20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{A30E0ABD-F5BF-3EEB-B933-08BD3D87F450}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\addons">
+      <UniqueIdentifier>{5DCC4717-C9CF-3879-AC71-6CE35714E000}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\addons\json">
+      <UniqueIdentifier>{5B2C8FD9-2D54-37F1-BB6B-75A1594A436A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\addons\meta">
+      <UniqueIdentifier>{29775EB2-D1EF-3F36-86E9-4BDACA94E4A7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\addons\os_api_impl">
+      <UniqueIdentifier>{F9A033DC-CDD2-340E-B9D1-AB43B8F49762}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\addons\pipeline">
+      <UniqueIdentifier>{579B87B7-72BA-3A89-B5A7-0BFBC2A40AF4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\addons\script">
+      <UniqueIdentifier>{8546BA5E-C1FC-377E-A8AB-0222105DFB7D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\addons\script\expr">
+      <UniqueIdentifier>{6DF33CF2-ED53-3421-8CD9-C3FEC8C21715}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\addons\stats">
+      <UniqueIdentifier>{127AE843-01C2-32B2-B963-B330EF718578}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\addons\system">
+      <UniqueIdentifier>{6083E838-DE8A-3980-8E08-3735AD244488}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\datastructures">
+      <UniqueIdentifier>{0C3200CC-2AE4-3C89-BB73-237C7DB5FEB2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\query">
+      <UniqueIdentifier>{6981E644-6B2C-3847-AE0B-35B6E6E196B7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\query\compiler">
+      <UniqueIdentifier>{D96CDB42-9560-363E-80FC-F54B75F721FB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\query\engine">
+      <UniqueIdentifier>{3AE587C5-63D3-3766-B7F8-FA4C9025488C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\storage">
+      <UniqueIdentifier>{B37C7F25-0EAD-3937-B87E-5B25D16EB998}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

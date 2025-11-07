@@ -13,3 +13,7 @@ bazel-*
 out
 docs/html
 MODULE.bazel.lock
+flecs_static.dir/
+/Debug/
+/Release/
+/x64/Debug/
