@@ -2,15 +2,12 @@
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <CustomBuild Include="C:\Projects\Raidlead\RaidEngine\ThirdParty\Flecs\CMakeFiles\c1b5ae491f062c64f490f823666c04da\generate.stamp.rule">
-      <Filter>CMakeFiles\c1b5ae491f062c64f490f823666c04da</Filter>
+      <Filter>CMake Rules</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="CMakeFiles">
-      <UniqueIdentifier>{0790A28E-1634-35C4-8CEE-0B2F6303692C}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="CMakeFiles\c1b5ae491f062c64f490f823666c04da">
-      <UniqueIdentifier>{295D40F9-803F-3687-8309-C58162E0D95D}</UniqueIdentifier>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{53937FD5-77B4-355D-AD17-49BAAF70E43D}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
