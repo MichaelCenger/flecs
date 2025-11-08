@@ -166,6 +166,7 @@ void Cascade_parent_cascade(void) {
     test_int(it.count, 1);
     test_uint(it.entities[0], e3);
     test_uint(it.sources[0], e0);
+
     test_bool(false, ecs_query_next(&it));
 
     ecs_query_fini(q);
@@ -1096,6 +1097,199 @@ void Cascade_cascade_w_cache_kind_default(void) {
     test_assert(q != NULL);
 
     ecs_query_fini(q);
+
+    ecs_fini(world);
+}
+
+void Cascade_cascade_w_optional(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+    ECS_TAG(world, Foo);
+    ECS_TAG(world, Bar);
+
+    ecs_query_t *q = ecs_query(world, {
+        .expr = "Foo, ?Bar, Position(cascade)",
+        .cache_kind = EcsQueryCacheDefault
+    });
+
+    test_assert(q != NULL);
+
+    ecs_entity_t p = ecs_new_w(world, Position);
+    ecs_entity_t e = ecs_new_w(world, Foo);
+    ecs_add_pair(world, e, EcsChildOf, p);
+
+    ecs_iter_t it = ecs_query_iter(world, q);
+    test_bool(true, ecs_query_next(&it));
+    test_int(1, it.count);
+    test_uint(e, it.entities[0]);
+    test_bool(true, ecs_field_is_set(&it, 0));
+    test_bool(false, ecs_field_is_set(&it, 1));
+    test_bool(true, ecs_field_is_set(&it, 2));
+    test_uint(0, ecs_field_src(&it, 0));
+    test_uint(p, ecs_field_src(&it, 2));
+    test_bool(false, ecs_query_next(&it));
+
+    ecs_query_fini(q);
+
+    ecs_fini(world);
+}
+
+void Cascade_remove_all(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+
+    ecs_query_t *q = ecs_query(world, {
+        .expr = "Position, ?Position(cascade)",
+        .cache_kind = EcsQueryCacheDefault
+    });
+
+    test_assert(q != NULL);
+
+    ecs_entity_t p = ecs_new_w(world, Position);
+    ecs_entity_t e = ecs_new_w(world, Position);
+    ecs_add_pair(world, e, EcsChildOf, p);
+
+    {
+        ecs_iter_t it = ecs_query_iter(world, q);
+        test_bool(true, ecs_query_next(&it));
+        test_int(1, it.count);
+        test_uint(p, it.entities[0]);
+        test_bool(true, ecs_field_is_set(&it, 0));
+        test_bool(false, ecs_field_is_set(&it, 1));
+        test_uint(0, ecs_field_src(&it, 0));
+
+        test_bool(true, ecs_query_next(&it));
+        test_int(1, it.count);
+        test_uint(e, it.entities[0]);
+        test_bool(true, ecs_field_is_set(&it, 0));
+        test_bool(true, ecs_field_is_set(&it, 1));
+        test_uint(0, ecs_field_src(&it, 0));
+        test_uint(p, ecs_field_src(&it, 1));
+        test_bool(false, ecs_query_next(&it));
+    }
+
+    ecs_remove_all(world, ecs_id(Position));
+
+    {
+        ecs_iter_t it = ecs_query_iter(world, q);
+        test_bool(false, ecs_query_next(&it));
+    }
+
+    ecs_query_fini(q);
+
+    ecs_fini(world);
+}
+
+void Cascade_recreate_after_remove_all(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+
+    ecs_query_t *q = ecs_query(world, {
+        .expr = "Position, ?Position(cascade)",
+        .cache_kind = EcsQueryCacheDefault
+    });
+
+    test_assert(q != NULL);
+
+    {
+        ecs_entity_t p = ecs_new_w(world, Position);
+        ecs_entity_t e = ecs_new_w(world, Position);
+        ecs_add_pair(world, e, EcsChildOf, p);
+
+        ecs_iter_t it = ecs_query_iter(world, q);
+        test_bool(true, ecs_query_next(&it));
+        test_int(1, it.count);
+        test_uint(p, it.entities[0]);
+        test_bool(true, ecs_field_is_set(&it, 0));
+        test_bool(false, ecs_field_is_set(&it, 1));
+        test_uint(0, ecs_field_src(&it, 0));
+
+        test_bool(true, ecs_query_next(&it));
+        test_int(1, it.count);
+        test_uint(e, it.entities[0]);
+        test_bool(true, ecs_field_is_set(&it, 0));
+        test_bool(true, ecs_field_is_set(&it, 1));
+        test_uint(0, ecs_field_src(&it, 0));
+        test_uint(p, ecs_field_src(&it, 1));
+        test_bool(false, ecs_query_next(&it));
+    }
+
+    ecs_remove_all(world, ecs_id(Position));
+
+    {
+        ecs_iter_t it = ecs_query_iter(world, q);
+        test_bool(false, ecs_query_next(&it));
+    }
+
+    {
+        ecs_entity_t p = ecs_new_w(world, Position);
+        ecs_entity_t e = ecs_new_w(world, Position);
+        ecs_add_pair(world, e, EcsChildOf, p);
+
+        ecs_iter_t it = ecs_query_iter(world, q);
+        test_bool(true, ecs_query_next(&it));
+        test_int(1, it.count);
+        test_uint(p, it.entities[0]);
+        test_bool(true, ecs_field_is_set(&it, 0));
+        test_bool(false, ecs_field_is_set(&it, 1));
+        test_uint(0, ecs_field_src(&it, 0));
+
+        test_bool(true, ecs_query_next(&it));
+        test_int(1, it.count);
+        test_uint(e, it.entities[0]);
+        test_bool(true, ecs_field_is_set(&it, 0));
+        test_bool(true, ecs_field_is_set(&it, 1));
+        test_uint(0, ecs_field_src(&it, 0));
+        test_uint(p, ecs_field_src(&it, 1));
+        test_bool(false, ecs_query_next(&it));
+    }
+
+    ecs_query_fini(q);
+
+    ecs_fini(world);
+}
+
+void Cascade_nested_target_deletion(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_TAG(world, Foo);
+    ECS_ENTITY(world, Rel, Traversable);
+
+    ecs_query_t *q = ecs_query(world, {
+        .terms = {{
+            Foo, .trav = Rel, .src.id = EcsSelf|EcsCascade
+        }}
+    });
+
+    test_assert(q != NULL);
+
+    ecs_entity_t left = ecs_new_w(world, Foo);
+    ecs_entity_t right = ecs_new_w(world, Foo);
+    ecs_entity_t mid = ecs_new_w(world, Foo);
+    ecs_entity_t root = ecs_new_w(world, Foo);
+
+    ecs_add_pair(world, root, Rel, left);
+    ecs_add_pair(world, root, Rel, mid);
+    ecs_add_pair(world, mid, Rel, right);
+
+    ecs_add_pair(world, left, EcsChildOf, root);
+    ecs_add_pair(world, mid, EcsChildOf, root);
+    ecs_add_pair(world, right, EcsChildOf, mid);
+
+    // Triggers cleanup logic which creates an intermediate table with one of
+    // the two pairs removed from root. The other pair contains a target that is
+    // no longer alive, which the cascade logic should be robust against.
+    // This is not a problem in practice, since the intermediate table will get
+    // cleaned immediately after and won't actually be used to store entities.
+    ecs_delete(world, root);
+
+    test_assert(!ecs_is_alive(world, left));
+    test_assert(!ecs_is_alive(world, mid));
+    test_assert(!ecs_is_alive(world, right));
+    test_assert(!ecs_is_alive(world, root));
 
     ecs_fini(world);
 }

@@ -25,6 +25,8 @@ ecs_entity_t do_import(world& world, const char *symbol) {
     // module resources.
     c_.add(flecs::Sparse);
 
+    c_.add(flecs::Singleton);
+
     ecs_set_scope(world, c_);
     world.emplace<T>(world);
     ecs_set_scope(world, scope);
@@ -78,8 +80,8 @@ flecs::entity import(world& world) {
 
 template <typename Module>
 inline flecs::entity world::module(const char *name) const {
-    flecs::entity result = this->entity(_::type<Module>::register_id(
-        world_, nullptr, false));
+    flecs::entity result = this->entity(
+        _::type<Module>::register_id(world_, nullptr, false));
 
     if (name) {
         flecs::entity prev_parent = result.parent();

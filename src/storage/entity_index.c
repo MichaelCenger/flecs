@@ -1,4 +1,5 @@
 #include "../private_api.h"
+#include <inttypes.h>
 
 static
 ecs_entity_index_page_t* flecs_entity_index_ensure_page(
@@ -15,7 +16,7 @@ ecs_entity_index_page_t* flecs_entity_index_ensure_page(
         ecs_entity_index_page_t*, page_index);
     ecs_entity_index_page_t *page = *page_ptr;
     if (!page) {
-        page = *page_ptr = flecs_bcalloc(&index->page_allocator);
+        page = *page_ptr = ecs_os_calloc_t(ecs_entity_index_page_t);
         ecs_assert(page != NULL, ECS_OUT_OF_MEMORY, NULL);
     }
 
@@ -31,23 +32,18 @@ void flecs_entity_index_init(
     ecs_vec_init_t(allocator, &index->dense, uint64_t, 1);
     ecs_vec_set_count_t(allocator, &index->dense, uint64_t, 1);
     ecs_vec_init_t(allocator, &index->pages, ecs_entity_index_page_t*, 0);
-    flecs_ballocator_init(&index->page_allocator,
-        ECS_SIZEOF(ecs_entity_index_page_t));
 }
 
 void flecs_entity_index_fini(
     ecs_entity_index_t *index)
 {
     ecs_vec_fini_t(index->allocator, &index->dense, uint64_t);
-#if defined(FLECS_SANITIZE) || defined(FLECS_USE_OS_ALLOC)
     int32_t i, count = ecs_vec_count(&index->pages);
     ecs_entity_index_page_t **pages = ecs_vec_first(&index->pages);
     for (i = 0; i < count; i ++) {
-        flecs_bfree(&index->page_allocator, pages[i]);
+        ecs_os_free(pages[i]);
     }
-#endif
     ecs_vec_fini_t(index->allocator, &index->pages, ecs_entity_index_page_t*);
-    flecs_ballocator_fini(&index->page_allocator);
 }
 
 ecs_record_t* flecs_entity_index_get_any(
@@ -69,7 +65,8 @@ ecs_record_t* flecs_entity_index_get(
     uint64_t entity)
 {
     ecs_record_t *r = flecs_entity_index_get_any(index, entity);
-    ecs_assert(r->dense < index->alive_count, ECS_INVALID_PARAMETER, NULL);
+    ecs_assert(r->dense < index->alive_count, ECS_INVALID_PARAMETER, 
+            "entity is not alive");
     ecs_assert(ecs_vec_get_t(&index->dense, uint64_t, r->dense)[0] == entity,
         ECS_INVALID_PARAMETER, "mismatching liveliness generation for entity");
     return r;
@@ -179,7 +176,7 @@ void flecs_entity_index_remove(
 
     r_swap->dense = dense;
     r->table = NULL;
-    r->idr = NULL;
+    r->cr = NULL;
     r->row = 0;
     r->dense = i_swap;
     ecs_vec_get_t(&index->dense, uint64_t, dense)[0] = e_swap;
@@ -204,10 +201,11 @@ uint64_t flecs_entity_index_get_alive(
 {
     ecs_record_t *r = flecs_entity_index_try_get_any(index, entity);
     if (r) {
-        return ecs_vec_get_t(&index->dense, uint64_t, r->dense)[0];
-    } else {
-        return 0;
+        if (r->dense < index->alive_count) {
+            return ecs_vec_get_t(&index->dense, uint64_t, r->dense)[0];
+        }
     }
+    return 0;
 }
 
 bool flecs_entity_index_is_alive(
@@ -251,11 +249,14 @@ uint64_t flecs_entity_index_new_id(
     uint32_t id = (uint32_t)++ index->max_id;
 
     ecs_assert(index->max_id <= UINT32_MAX, ECS_INVALID_OPERATION,
-        "max id %u exceeds 32 bits", index->max_id);
+        "entity id overflow after creating new entity "
+            "(value is %" PRIu64 ", cannot exceed %u)", 
+                index->max_id, UINT32_MAX);
 
     /* Make sure id hasn't been issued before */
     ecs_assert(!flecs_entity_index_exists(index, id), ECS_INVALID_OPERATION,
-        "new entity %u id already in use (likely due to overlapping ranges)", (uint32_t)id);
+        "new entity %u id already in use (likely due to overlapping ranges)", 
+            (uint32_t)id);
 
     ecs_vec_append_t(index->allocator, &index->dense, uint64_t)[0] = id;
 
@@ -289,12 +290,15 @@ uint64_t* flecs_entity_index_new_ids(
     for (i = 0; i < to_add; i ++) {
         uint32_t id = (uint32_t)++ index->max_id;
 
-        ecs_assert(index->max_id <= UINT32_MAX, ECS_INVALID_OPERATION,
-        	"max id %u exceeds 32 bits", index->max_id);
+    ecs_assert(index->max_id <= UINT32_MAX, ECS_INVALID_OPERATION,
+        "entity id overflow after creating new entity "
+            "(value is %" PRIu64 ", cannot exceed %u)", 
+                index->max_id, UINT32_MAX);
 
         /* Make sure id hasn't been issued before */
         ecs_assert(!flecs_entity_index_exists(index, id), ECS_INVALID_OPERATION,
-            "new entity %u id already in use (likely due to overlapping ranges)", (uint32_t)id);
+            "new entity %u id already in use (likely due to overlapping ranges)", 
+                (uint32_t)id);
 
         int32_t dense = dense_count + i;
         ecs_vec_get_t(&index->dense, uint64_t, dense)[0] = id;
@@ -350,6 +354,54 @@ void flecs_entity_index_clear(
 
     index->alive_count = 1;
     index->max_id = 0;
+}
+
+void flecs_entity_index_shrink(
+    ecs_entity_index_t *index)
+{
+    ecs_vec_set_count_t(
+        index->allocator, &index->dense, uint64_t, index->alive_count);
+    ecs_vec_reclaim_t(index->allocator, &index->dense, uint64_t);
+
+    int32_t i, e, max_page_index = 0, count = ecs_vec_count(&index->pages);
+    ecs_entity_index_page_t **pages = ecs_vec_first_t(&index->pages,
+        ecs_entity_index_page_t*);
+    for (i = 0; i < count; i ++) {
+        ecs_entity_index_page_t *page = pages[i];
+        if (!page) {
+            continue;
+        }
+
+        bool has_alive = false;
+        for (e = 0; e < FLECS_ENTITY_PAGE_SIZE; e ++) {
+            ecs_record_t *r = &page->records[e];
+            ecs_entity_t entity = flecs_ito(uint64_t, (i * FLECS_ENTITY_PAGE_SIZE) + e);
+
+            if (r->dense) {
+                ecs_assert(flecs_entity_index_get_any(index, entity) == r,
+                    ECS_INTERNAL_ERROR, NULL);
+
+                if (flecs_entity_index_is_alive(index, entity)) {
+                    ecs_assert(flecs_entity_index_is_alive(index, entity),
+                        ECS_INTERNAL_ERROR, NULL);
+                    has_alive = true;
+                    break;
+                }
+            }
+        }
+
+        if (!has_alive) {
+            ecs_os_free(pages[i]);
+            pages[i] = NULL;
+        } else {
+            max_page_index = i;
+        }
+    }
+
+    ecs_vec_set_count_t(
+        index->allocator, &index->pages, ecs_entity_index_page_t*, 
+        max_page_index + 1);
+    ecs_vec_reclaim_t(index->allocator, &index->pages, ecs_entity_index_page_t*);
 }
 
 const uint64_t* flecs_entity_index_ids(

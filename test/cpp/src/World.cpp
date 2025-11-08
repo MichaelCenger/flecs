@@ -144,33 +144,33 @@ void World_multi_world_component(void) {
         .set(Mass{100});
 
     {
-        const Position *p = w1_e.get<Position>();
+        const Position *p = w1_e.try_get<Position>();
         test_assert(p != nullptr);
         test_int(p->x, 10);
         test_int(p->y, 20);
 
-        const Velocity *v = w1_e.get<Velocity>();
+        const Velocity *v = w1_e.try_get<Velocity>();
         test_assert(v != nullptr);
         test_int(v->x, 1);
         test_int(v->y, 2);
 
-        const Mass *m = w1_e.get<Mass>();
+        const Mass *m = w1_e.try_get<Mass>();
         test_assert(m != nullptr);
         test_int(m->value, 100);
     }
 
     {
-        const Position *p = w2_e.get<Position>();
+        const Position *p = w2_e.try_get<Position>();
         test_assert(p != nullptr);
         test_int(p->x, 10);
         test_int(p->y, 20);
 
-        const Velocity *v = w2_e.get<Velocity>();
+        const Velocity *v = w2_e.try_get<Velocity>();
         test_assert(v != nullptr);
         test_int(v->x, 1);
         test_int(v->y, 2);
 
-        const Mass *m = w2_e.get<Mass>();
+        const Mass *m = w2_e.try_get<Mass>();
         test_assert(m != nullptr);
         test_int(m->value, 100);
     }
@@ -369,7 +369,7 @@ void World_register_component_w_reset_in_multithreaded(void) {
 
     test_assert(e.has<Position>());
     test_assert(e.has(pos));
-    const Position *p = e.get<Position>();
+    const Position *p = e.try_get<Position>();
     test_assert(p != nullptr);
     test_int(p->x, 10);
     test_int(p->y, 20);
@@ -396,7 +396,7 @@ void World_register_short_template(void) {
     test_assert(c != 0);
     test_str(c.name(), "Tmp<Test>");
 
-    const EcsComponent *ptr = c.get<flecs::Component>();
+    const EcsComponent *ptr = c.try_get<flecs::Component>();
     test_assert(ptr != NULL);
     test_int(ptr->size, 4);
     test_int(ptr->alignment, 4);
@@ -496,7 +496,7 @@ void World_implicit_register_w_new_world(void) {
 
         auto e = ecs.entity().set<Position>({10, 20});
         test_assert(e.has<Position>());
-        auto *p = e.get<Position>();
+        auto *p = e.try_get<Position>();
         test_assert(p != NULL);
         test_int(p->x, 10);
         test_int(p->y, 20);
@@ -508,7 +508,7 @@ void World_implicit_register_w_new_world(void) {
 
         auto e = ecs.entity().set<Position>({10, 20});
         test_assert(e.has<Position>());
-        auto *p = e.get<Position>();
+        auto *p = e.try_get<Position>();
         test_assert(p != NULL);
         test_int(p->x, 10);
         test_int(p->y, 20);
@@ -1954,12 +1954,12 @@ void World_atfini_w_ctx(void) {
 void World_get_mut_T(void) {
     flecs::world world;
 
-    Position *p = world.get_mut<Position>();
+    Position *p = world.try_get_mut<Position>();
 
     test_assert(p == nullptr);
 
     world.set<Position>({10, 20});
-    p = world.get_mut<Position>();
+    p = world.try_get_mut<Position>();
 
     test_assert(p != nullptr);
     test_int(p->x, 10);
@@ -1971,12 +1971,12 @@ void World_get_mut_R_T(void) {
 
     struct Tgt { };
 
-    Position *p = world.get_mut<Position, Tgt>();
+    Position *p = world.try_get_mut<Position, Tgt>();
     test_assert(p == nullptr);
 
     world.set<Position, Tgt>({10, 20});
     
-    p = world.get_mut<Position, Tgt>();
+    p = world.try_get_mut<Position, Tgt>();
     test_assert(p != nullptr);
 
     test_int(p->x, 10);
@@ -2056,7 +2056,7 @@ void World_fini_copy_move_assign(void) {
     *finished = true;
     };
 
-    auto get_world_id = [](const flecs::world &world) { return world.get<ID>()->id; };
+    auto get_world_id = [](const flecs::world &world) { return world.try_get<ID>()->id; };
 
     bool finished_1 = false;
     bool finished_2 = false;
@@ -2124,4 +2124,178 @@ void World_world_init_fini_log_all(void) {
     ecs.import<flecs::alerts>();
 
     test_assert(true);
+}
+
+void World_exclusive_access_self_mutate(void) {
+    flecs::world ecs;
+
+    ecs.exclusive_access_begin();
+
+    flecs::entity e = ecs.entity();
+
+    e.add<Position>();
+    test_assert(e.has<Position>());
+
+    ecs.exclusive_access_end();
+}
+
+void* thread_exclusive_access_other_fini(void *arg) {
+    flecs::world *world = static_cast<flecs::world*>(arg);
+    test_expect_abort();
+    world->entity();
+    return NULL;
+}
+
+void World_exclusive_access_other_mutate(void) {
+    install_test_abort();
+
+    flecs::world ecs;
+
+    ecs.exclusive_access_begin();
+
+    ecs_os_thread_t thr = 
+        ecs_os_thread_new(thread_exclusive_access_other_fini, &ecs);
+
+    ecs_os_thread_join(thr);
+
+    test_assert(false); // should not get here
+}
+
+void World_id_if_registered(void) {
+    {
+        flecs::world world;
+
+        test_assert(world.id_if_registered<Position>() == 0);
+        test_assert(world.id_if_registered<Position>() == 0);
+
+        auto c = world.component<Position>();
+
+        test_assert(world.id_if_registered<Position>() == c);
+    }
+
+    {
+        flecs::world world;
+
+        test_assert(world.id_if_registered<Position>() == 0);
+        test_assert(world.id_if_registered<Position>() == 0);
+
+        auto c = world.component<Position>();
+
+        test_assert(world.id_if_registered<Position>() == c);
+    }
+}
+
+void World_get_type_info_t(void) {
+    flecs::world world;
+
+    flecs::entity c = world.component<Position>();
+
+    const flecs::type_info_t *ti = world.type_info(c);
+    test_assert(ti != nullptr);
+    test_int(ti->size, sizeof(Position));
+    test_int(ti->alignment, alignof(Position));
+    test_assert(ti->component == c);
+}
+
+void World_get_type_info_T(void) {
+    flecs::world world;
+
+    const flecs::type_info_t *ti = world.type_info<Position>();
+    test_assert(ti != nullptr);
+    test_int(ti->size, sizeof(Position));
+    test_int(ti->alignment, alignof(Position));
+    test_assert(ti->component == world.component<Position>());
+}
+
+void World_get_type_info_r_t(void) {
+    flecs::world world;
+
+    flecs::entity c = world.component<Position>();
+    flecs::entity tgt = world.entity();
+
+    const flecs::type_info_t *ti = world.type_info(c, tgt);
+    test_assert(ti != nullptr);
+    test_int(ti->size, sizeof(Position));
+    test_int(ti->alignment, alignof(Position));
+    test_assert(ti->component == c);
+}
+
+void World_get_type_info_R_t(void) {
+    flecs::world world;
+
+    flecs::entity c = world.component<Position>();
+    flecs::entity tgt = world.entity();
+
+    const flecs::type_info_t *ti = world.type_info<Position>(tgt);
+    test_assert(ti != nullptr);
+    test_int(ti->size, sizeof(Position));
+    test_int(ti->alignment, alignof(Position));
+    test_assert(ti->component == c);
+}
+
+void World_get_type_info_R_T(void) {
+    flecs::world world;
+
+    struct Tgt {};
+
+    flecs::entity c = world.component<Position>();
+
+    const flecs::type_info_t *ti = world.type_info<Position, Tgt>();
+    test_assert(ti != nullptr);
+    test_int(ti->size, sizeof(Position));
+    test_int(ti->alignment, alignof(Position));
+    test_assert(ti->component == c);
+}
+
+void World_get_type_info_t_tag(void) {
+    flecs::world world;
+
+    struct Tag {};
+
+    flecs::entity c = world.component<Tag>();
+
+    const flecs::type_info_t *ti = world.type_info(c);
+    test_assert(ti == nullptr);
+}
+
+void World_get_type_info_T_tag(void) {
+    flecs::world world;
+
+    struct Tag {};
+
+    const flecs::type_info_t *ti = world.type_info<Tag>();
+    test_assert(ti == nullptr);
+}
+
+void World_get_type_info_r_t_tag(void) {
+    flecs::world world;
+
+    struct Tag {};
+
+    flecs::entity c = world.component<Tag>();
+    flecs::entity tgt = world.entity();
+
+    const flecs::type_info_t *ti = world.type_info(c, tgt);
+    test_assert(ti == nullptr);
+}
+
+void World_get_type_info_R_t_tag(void) {
+    flecs::world world;
+
+    struct Tag {};
+
+    flecs::entity tgt = world.entity();
+
+    const flecs::type_info_t *ti = world.type_info<Tag>(tgt);
+    test_assert(ti == nullptr);
+}
+
+void World_get_type_info_R_T_tag(void) {
+    flecs::world world;
+
+    struct Tag {};
+    struct Tgt {};
+
+    const flecs::type_info_t *ti = world.type_info<Tag, Tgt>();
+    test_assert(ti == nullptr);
 }

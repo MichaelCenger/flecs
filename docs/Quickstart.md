@@ -2,7 +2,7 @@
 This document provides a quick overview of the different features and concepts in Flecs with short examples. This is a good resource if you're just getting started or just want to get a better idea of what kind of features are available in Flecs!
 
 ## Building Flecs
-To use Flecs, copy the [distr/flecs.c](https://raw.githubusercontent.com/SanderMertens/flecs/master/distr/flecs.c) and [distr/flecs.h](https://raw.githubusercontent.com/SanderMertens/flecs/master/distr/flecs.h) files from the [distr folder](https://raw.githubusercontent.com/SanderMertens/flecs/master/distr) to your project's source folder. When building, make sure your build system is setup to do the following:
+To use Flecs, copy the [distr/flecs.c](https://raw.githubusercontent.com/SanderMertens/flecs/master/distr/flecs.c) and [distr/flecs.h](https://raw.githubusercontent.com/SanderMertens/flecs/master/distr/flecs.h) files from the [distr folder](https://github.com/SanderMertens/flecs/tree/master/distr) to your project's source folder. When building, make sure your build system is setup to do the following:
 
 - If it is a C++ project, make sure to compile [distr/flecs.c](https://raw.githubusercontent.com/SanderMertens/flecs/master/distr/flecs.c) as C code, for example by using `gcc`/`clang` instead of `g++`/`clang++`.
 
@@ -10,7 +10,7 @@ To use Flecs, copy the [distr/flecs.c](https://raw.githubusercontent.com/SanderM
 
 - When compiling Flecs with `gcc`/`clang`, add `-std=gnu99` to the compiler command. This ensures that addons that rely on time & socket functions are compiled correctly.
 
-- C++ files that use Flecs must be compiled with `-std=c++0x` (C++11) or higher.
+- C++ files that use Flecs must be compiled with `-std=c++17` or higher.
 
 ### Dynamic linking
 To build Flecs as a dynamic library, remove this line from the top of the [distr/flecs.h](https://raw.githubusercontent.com/SanderMertens/flecs/master/distr/flecs.h) file:
@@ -90,6 +90,20 @@ When building for emscripten, add the following command line options to the `emc
 -s EXPORT_NAME="my_app"
 ```
 
+## Android(cmake)
+
+When building for Android, you should:
+
+- download NDK
+- check the cmake preset file and update the `cacheVariables` as you like
+- run a command like below:
+
+```cmd
+cmake -S. -Bbuild_android -GNinja --preset=Android
+```
+
+Then run command `ninja` in `build_android` directory to start build.
+
 ### Addons
 Flecs has a modular architecture that makes it easy to only build the features you really need. By default all addons are built. To customize a build, first define `FLECS_CUSTOM_BUILD`, then add defines for the addons you need. For example:
 
@@ -108,7 +122,7 @@ The following addons can be configured:
 
 Addon         | Description                                      | Define              |
 --------------|--------------------------------------------------|---------------------|
-[Cpp](/flecs/group__cpp.html)                              | C++11 API                                        | FLECS_CPP           |
+[Cpp](/flecs/group__cpp.html)                              | C++17 API                                        | FLECS_CPP           |
 [Module](/flecs/group__c__addons__module.html)             | Organize game logic into reusable modules        | FLECS_MODULE        |
 [System](/flecs/group__c__addons__system.html)             | Create & run systems                             | FLECS_SYSTEM        |
 [Pipeline](/flecs/group__c__addons__pipeline.html)         | Automatically schedule & multithread systems     | FLECS_PIPELINE      |
@@ -174,6 +188,22 @@ let world = World::new();
 // Do the ECS stuff
 ```
 </li>
+<li><b class="tab-title">Clojure</b>
+
+```clojure
+;; The dependency for this binding is at https://clojars.org/io.github.pfeodrippe/vybe-flecs,
+;; code at https://github.com/pfeodrippe/vybe, see also https://vybegame.dev/vybe-flecs
+
+;; Require a higher-level binding and a lower-level one.
+(require '[vybe.flecs :as vf])
+(require '[vybe.flecs.c :as vf.c])
+(import '(org.vybe.flecs flecs))
+
+(def w (vf/make-world))
+
+;; Do the ECS stuff
+```
+</li>
 </ul>
 </div>
 
@@ -221,6 +251,19 @@ e.destruct();
 e.is_alive(); // false!
 ```
 </li>
+<li><b class="tab-title">Clojure</b>
+
+```clojure
+(merge w {:e []})
+(vf/alive? (:e w))
+;; => #{}
+
+(dissoc w :e)
+(:e w)
+;; => nil
+
+```
+</li>
 </ul>
 </div>
 
@@ -260,6 +303,14 @@ let e = world.entity_named("bob");
 println!("Entity name: {}", e.name());
 ```
 </li>
+<li><b class="tab-title">Clojure</b>
+
+```clojure
+(merge w {:bob []})
+(vf/get-name (:bob w))
+;; => "bob"
+```
+</li>
 </ul>
 </div>
 
@@ -288,6 +339,12 @@ Entity e = world.Lookup("Bob");
 
 ```rust
 let e = world.lookup("bob");
+```
+</li>
+<li><b class="tab-title">Clojure</b>
+
+```clojure
+(def e (w :bob))
 ```
 </li>
 </ul>
@@ -341,7 +398,16 @@ e.set<Position>({10, 20})
  .set<Velocity>({1, 2});
 
 // Get a component
-const Position *p = e.get<Position>();
+const Position& p = e.get<Position>();
+
+// Get mutable:
+// Position& p = e.get_mut<Position>();
+
+// Get optional:
+// const Position* p = e.try_get<Position>();
+
+// Get optional mutable:
+// Position* p = e.try_get_mut<Position>();
 
 // Remove component
 e.remove<Position>();
@@ -389,6 +455,28 @@ e.get::<&Position>(|p| {
 
 // Remove component
 e.remove::<Position>();
+```
+</li>
+<li><b class="tab-title">Clojure</b>
+
+```clojure
+(merge w {:e []})
+(def e (:e w))
+
+;; Add a component. This creates the component in the ECS storage, but does not
+;; assign it with a value.
+(conj e Velocity)
+
+;; Set the value for the Position & Velocity components. A component will be
+;; added if the entity doesn't have it yet.
+(conj e (Position [10 20]) (Velocity [1 2]))
+
+;; Get a component
+(e Position)
+;; => {Position {:x 10.0, :y 20.0}}
+
+;; Remove component
+(disj e Position)
 ```
 </li>
 </ul>
@@ -444,6 +532,20 @@ println!("Name: {}", pos_e.name()); // outputs 'Name: Position'
 pos_e.add::<Serializable>();
 ```
 </li>
+<li><b class="tab-title">Clojure</b>
+
+Clojure applications can use the `vf/ent` function.
+```clojure
+(def pos-e (vf/ent w Position))
+
+;; Components generated from Clojure have the name prefixed with `C_` in the Flecs internal name
+(vf/get-name pos-e)
+;; => "C_Position"
+
+;; It's possible to add components like you would for any entity
+(conj pos-e Serializable)
+```
+</li>
 </ul>
 </div>
 
@@ -466,8 +568,8 @@ printf("Component size: %u\n", c->size);
 ```cpp
 flecs::entity pos_e = world.entity<Position>();
 
-const EcsComponent *c = pos_e.get<flecs::Component>();
-std::cout << "Component size: " << c->size << std::endl;
+const EcsComponent& c = pos_e.get<flecs::Component>();
+std::cout << "Component size: " << c.size << std::endl;
 ```
 </li>
 <li><b class="tab-title">C#</b>
@@ -487,6 +589,15 @@ let pos_e = world.entity_from::<Position>();
 pos_e.get::<&flecs::Component>(|c| {
     println!("Component size: {}", c.size);
 });
+```
+</li>
+<li><b class="tab-title">Clojure</b>
+
+```clojure
+;; We use the lower-level C Flecs API directly.
+(-> (vf.c/ecs-get-id w (vf/eid pos-e) (vf/eid w :vf/component))
+    (vp/as vf/EcsComponent))
+;; => #:vybe.flecs{EcsComponent {:size 8, :alignment 4}}
 ```
 </li>
 </ul>
@@ -532,11 +643,11 @@ e.has<Enemy>(); // false!
 auto Enemy = world.entity();
 
 // Create entity, add Enemy tag
-auto e = world.entity().add(Enemy);
-e.has(Enemy); // true!
+auto e2 = world.entity().add(Enemy);
+e2.has(Enemy); // true!
 
-e.remove(Enemy);
-e.has(Enemy); // false!
+e2.remove(Enemy);
+e2.has(Enemy); // false!
 ```
 </li>
 <li><b class="tab-title">C#</b>
@@ -587,6 +698,19 @@ e.has_id(enemy); // true!
 
 e.remove_id(enemy);
 e.has_id(enemy); // false!
+```
+</li>
+<li><b class="tab-title">Clojure</b>
+
+```clojure
+;; Add tag (it will create the tag if it doesn't already exist) to an entity
+(merge w {:e [:enemy]})
+(:enemy (w :e))
+;; => :enemy
+ 
+(disj (w :e) :enemy)
+(:enemy (w :e))
+;; => nil
 ```
 </li>
 </ul>
@@ -673,6 +797,22 @@ bob.remove_first::<Likes>(alice);
 bob.has_first::<Likes>(alice); // false!
 ```
 </li>
+<li><b class="tab-title">Clojure</b>
+
+```clojure
+;; Create a small graph with two entities that like each other
+;; NOTE that relationships are encoded using `[...]`
+(merge w {:bob [[:likes :alice]]
+          :alice [[:likes :bob]]})
+
+(get (w :bob) [:likes :alice])
+;; => [:likes :alice]
+
+(disj (w :bob) [:likes :alice])
+(get (w :bob) [:likes :alice])
+;; => nil
+```
+</li>
 </ul>
 </div>
 
@@ -703,6 +843,11 @@ Id id = world.Pair<Likes>(bob);
 let id = world.id_first::<Likes>(bob);
 ```
 </li>
+<li><b class="tab-title">Clojure</b>
+
+```clojure
+(vf/eid w [:likes :bob])
+```
 </ul>
 </div>
 
@@ -721,7 +866,7 @@ if (ecs_id_is_pair(id)) {
 <li><b class="tab-title">C++</b>
 
 ```cpp
-flecs::id id = ...;
+flecs::id id = world.pair<Likes>(Bob);
 if (id.is_pair()) {
     auto relationship = id.first();
     auto target = id.second();
@@ -749,6 +894,15 @@ if id.is_pair() {
 }
 ```
 </li>
+<li><b class="tab-title">Clojure</b>
+
+```clojure
+(let [id (vf/eid w [:alice :likes])]
+  [(vf/get-name (vf/pair-first w id))
+   (vf/get-name (vf/pair-second w id))])
+;; => ["alice" "likes"]
+```
+</li>
 </ul>
 </div>
 
@@ -770,7 +924,7 @@ ecs_has_pair(world, Bob, Grows, Pears); // true!
 <li><b class="tab-title">C++</b>
 
 ```cpp
-flecs::entity bob = ...;
+flecs::entity bob = world.entity();
 bob.add(Eats, Apples);
 bob.add(Eats, Pears);
 bob.add(Grows, Pears);
@@ -806,6 +960,14 @@ bob.has_id((eats, pears)); // true!
 bob.has_id((grows, pears)); // true!
 ```
 </li>
+<li><b class="tab-title">Clojure</b>
+
+```clojure
+(merge w {:bob [[:eats :apple] [:eats :pears] [:grows :pears]]})
+(:bob w)
+;; => #{[:grows :pears] [:eats :pears] [:eats :apple]}
+```
+</li>
 </ul>
 </div>
 
@@ -821,7 +983,7 @@ ecs_entity_t o = ecs_get_target(world, Alice, Likes, 0); // Returns Bob
 <li><b class="tab-title">C++</b>
 
 ```cpp
-flecs::entity alice = ...;
+flecs::entity alice = world.entity();
 auto o = alice.target<Likes>(); // Returns Bob
 ```
 </li>
@@ -837,6 +999,13 @@ Entity o = Alice.Target<Likes>(); // Returns Bob
 ```rust
 let alice = world.entity().add_first::<Likes>(bob);
 let o = alice.target::<Likes>(0); // Returns bob
+```
+</li>
+<li><b class="tab-title">Clojure</b>
+
+```clojure
+(vf/get-name (vf/target (w :alice) :likes))
+;; => "bob"
 ```
 </li>
 </ul>
@@ -888,6 +1057,21 @@ let child = world.entity().child_of_id(parent);
 
 // Deleting the parent also deletes its children
 parent.destruct();
+```
+</li>
+<li><b class="tab-title">Clojure</b>
+
+```clojure
+;; Note the nested map representing a child.
+(merge w {:parent [{:child []}]})
+(def child (w [:parent :child]))
+(vf/alive? child)
+;; => true
+
+;; Deleting the parent also deletes its children
+(dissoc w :parent)
+(vf/alive? child)
+;; => false
 ```
 </li>
 </ul>
@@ -951,6 +1135,13 @@ world.lookup("parent::child"); // returns child
 parent.lookup("child"); // returns child
 ```
 </li>
+<li><b class="tab-title">Clojure</b>
+
+```clojure
+(vf/get-name (w [:parent :child]))
+;; => "parent.child"
+```
+</li>
 </ul>
 </div>
 
@@ -962,12 +1153,11 @@ Queries (see below) can use hierarchies to order data breadth-first, which can c
 ```c
 ecs_query_t *q = ecs_query(world, {
     .terms = {
-        { ecs_id(Position) },
-        { ecs_id(Position), .src = {
-            .flags = EcsCascade,       // Breadth-first order
-            .trav = EcsChildOf // Use ChildOf relationship for traversal
+        { .id = ecs_id(Position) },
+        { .id = ecs_id(Position), 
+            .trav = EcsChildOf, // Use ChildOf relationship for traversal
+            .src.id = EcsCascade // Breadth-first order
         }}
-    }
 });
 
 ecs_iter_t it = ecs_query_iter(world, q);
@@ -1020,6 +1210,18 @@ q.each(|(p, p_parent)| {
 });
 ```
 </li>
+<li><b class="tab-title">Clojure</b>
+
+```clojure
+;; The result of `with-query` will be available for you in the form of a vector.
+(vf/with-query w [pos Position
+                  pos-parent [:meta {:flags #{:up :cascade}}
+                              Position]]
+  ;; Process each entity.
+  )
+;; => [...]
+```
+</li>
 </ul>
 </div>
 
@@ -1047,7 +1249,7 @@ ecs_os_free(type_str);
 <li><b class="tab-title">C++</b>
 
 ```cpp
-auto e = ecs.entity()
+auto e = world.entity()
     .add<Position>()
     .add<Velocity>();
 
@@ -1072,6 +1274,14 @@ let e = world.entity().add::<Position>().add::<Velocity>();
 println!("Components: {}", e.archetype().to_string().unwrap()); // output: 'Position,Velocity'
 ```
 </li>
+<li><b class="tab-title">Clojure</b>
+
+```clojure
+(merge w {:some-entity [(Position) (Velocity)]})
+(:some-entity w)
+;; => #{{Position {:x 0.0, :y 0.0}}, {Velocity {:x 0.0, :y 0.0}} }
+```
+</li>
 </ul>
 </div>
 
@@ -1092,6 +1302,7 @@ for (int i = 0; i < type->count; i++) {
 <li><b class="tab-title">C++</b>
 
 ```cpp
+auto e = world.entity();
 e.each([&](flecs::id id) {
     if (id == world.id<Position>()) {
         // Found Position component!
@@ -1121,6 +1332,13 @@ e.each_component(|id| {
 });
 ```
 </li>
+<li><b class="tab-title">Clojure</b>
+
+```clojure
+(for [c (:some-entity w)]
+  (vf/get-name w c))
+```
+</li>
 </ul>
 </div>
 
@@ -1132,6 +1350,9 @@ A singleton is a single instance of a component that can be retrieved without an
 <li><b class="tab-title">C</b>
 
 ```c
+// Register singleton component
+ecs_add_id(world, ecs_id(Gravity), EcsSingleton);
+
 // Set singleton component
 ecs_singleton_set(world, Gravity, { 9.81 });
 
@@ -1142,11 +1363,15 @@ const Gravity *g = ecs_singleton_get(world, Gravity);
 <li><b class="tab-title">C++</b>
 
 ```cpp
+
+// Register singleton component
+world.component<Gravity>().add(flecs::Singleton);
+
 // Set singleton component
 world.set<Gravity>({ 9.81 });
 
 // Get singleton component
-const Gravity *g = world.get<Gravity>();
+const Gravity& g = world.get<Gravity>();
 ```
 </li>
 <li><b class="tab-title">C#</b>
@@ -1171,6 +1396,14 @@ world.get::<&Gravity>(|g| {
 });
 ```
 </li>
+<li><b class="tab-title">Clojure</b>
+
+```clojure
+(vf/singleton! w (Position [30 40]))
+(vf/singleton w Position)
+;; => {Position {:x 30.0, :y 40.0}}
+```
+</li>
 </ul>
 </div>
 
@@ -1181,7 +1414,7 @@ Singleton components are created by adding the component to its own entity id. T
 <li><b class="tab-title">C</b>
 
 ```c
-ecs_set(world, ecs_id(Gravity), Gravity, {10, 20});
+ecs_set(world, ecs_id(Gravity), Gravity, {9.81});
 
 const Gravity *g = ecs_get(world, ecs_id(Gravity), Gravity);
 ```
@@ -1191,9 +1424,9 @@ const Gravity *g = ecs_get(world, ecs_id(Gravity), Gravity);
 ```cpp
 flecs::entity grav_e = world.entity<Gravity>();
 
-grav_e.set<Gravity>({10, 20});
+grav_e.set<Gravity>({9.81});
 
-const Gravity *g = grav_e.get<Gravity>();
+const Gravity& g = grav_e.get<Gravity>();
 ```
 </li>
 <li><b class="tab-title">C#</b>
@@ -1218,6 +1451,13 @@ grav_e.get::<&Gravity>(|g| {
 });
 ```
 </li>
+<li><b class="tab-title">Clojure</b>
+
+```clojure
+(merge w {Position [(Position [30 40])]})
+(get-in w [Position Position])
+```
+</li>
 </ul>
 </div>
 
@@ -1227,8 +1467,10 @@ The following examples show how to query for a singleton component:
 <li><b class="tab-title">C</b>
 
 ```c
+ecs_add_id(world, ecs_id(Gravity), EcsSingleton);
+
 // Create query that matches Gravity as singleton
-ecs_query_t *q = ecs_query(ecs, {
+ecs_query_t *q = ecs_query(world, {
     .terms = {
         // Regular component
         { .id = ecs_id(Velocity) },
@@ -1238,23 +1480,20 @@ ecs_query_t *q = ecs_query(ecs, {
 });
 
 // Create a system using the query DSL with a singleton:
-ECS_SYSTEM(world, ApplyGravity, EcsOnUpdate, Velocity, Gravity($));
+ECS_SYSTEM(world, ApplyGravity, EcsOnUpdate, Velocity, Gravity);
 ```
 </li>
 <li><b class="tab-title">C++</b>
 
 ```cpp
 world.query_builder<Velocity, Gravity>()
-    .term_at(1).singleton()
     .build();
 ```
 </li>
 <li><b class="tab-title">C#</b>
 
 ```cs
-world.QueryBuilder<Velocity, Gravity>()
-    .TermAt(1).Singleton()
-    .Build();
+world.QueryBuilder<Velocity, Gravity>().Build();
 ```
 </li>
 <li><b class="tab-title">Rust</b>
@@ -1262,9 +1501,15 @@ world.QueryBuilder<Velocity, Gravity>()
 ```rust
 world
     .query::<(&Velocity, &Gravity)>()
-    .term_at(1)
-    .singleton()
     .build();
+```
+</li>
+<li><b class="tab-title">Clojure</b>
+
+```clojure
+(vf/with-query w [_ Velocity
+                  pos [:src Position Position]]
+  pos)
 ```
 </li>
 </ul>
@@ -1276,11 +1521,12 @@ Queries are the main mechanism for finding and iterating through entities. Queri
 <div class="flecs-snippet-tabs">
 <ul>
 <li><b class="tab-title">C</b>
+    
 ```c
 ecs_query_t *q = ecs_query(world, {
     .terms = {
-        { ecs_id(Position) },
-        { ecs_pair(EcsChildOf, parent) }
+        { .id = ecs_id(Position) },
+        { .id = ecs_pair(EcsChildOf, parent) }
     }
 });
 
@@ -1299,7 +1545,7 @@ while (ecs_query_next(&it)) {
     }
 }
 
-ecs_query_fini(f);
+ecs_query_fini(q);
 ```
 </li>
 <li><b class="tab-title">C++</b>
@@ -1396,6 +1642,31 @@ q.run(|mut it| {
 });
 ```
 </li>
+<li><b class="tab-title">Clojure</b>
+    
+```clojure
+;; We create a parent and a child, with the child containing Position and Velocity
+(merge w {:parent [{:child [(Position [1 2]) (Velocity [0.1 0.2])]}]})
+
+;; Simple query, the bindings are const by default, :mut should be used to indicate 
+;; that you plan to mutate binding, otherwise an exception will be thrown
+(vf/with-query w [p [:mut Position]
+                  {:keys [x y]} Velocity]
+  (-> p
+      (update :x + x)
+      (update :y + y)))
+;; => [{Position {:x 1.1, :y 2.2}}]
+
+;; We can do more complex queries, e.g. query for all the entities
+;; that have Position and that are a child of :parent, :vf/entity
+;; is a way to retrieve the entity which we are iterating over
+(vf/with-query w [p Position
+                  _ [:vf/child-of :parent]
+                  e :vf/entity]
+  (vf/get-name e))
+;; => ["parent.child"]
+```
+</li>
 </ul>
 </div>
 
@@ -1410,7 +1681,7 @@ The following example shows a query that matches all entities with a parent that
 ```c
 ecs_query_t *q = ecs_query(world, {
     .terms = {
-        { ecs_pair(EcsChildOf, EcsWildcard) }
+        { ecs_pair(EcsChildOf, EcsWildcard) },
         { ecs_id(Position), .oper = EcsNot },
     }
 });
@@ -1453,6 +1724,14 @@ let q = world
 // Iteration code is the same
 ```
 </li>
+<li><b class="tab-title">Clojure</b>
+
+```clojure
+(vf/with-query w [_ [:vf/child-of :*]
+                  _ [:not Position]]
+  ...)
+```
+</li>
 </ul>
 </div>
 
@@ -1466,10 +1745,10 @@ A system is a query combined with a callback. Systems can be either ran manually
 <li><b class="tab-title">C</b>
 
 ```c
+
 // Option 1, use the ECS_SYSTEM convenience macro
 ECS_SYSTEM(world, Move, 0, Position, Velocity);
 ecs_run(world, Move, delta_time, NULL); // Run system
-
 // Option 2, use the ecs_system_init function/ecs_system macro
 ecs_entity_t move_sys = ecs_system(world, {
     .query.terms = {
@@ -1543,6 +1822,33 @@ let move_sys = world
 move_sys.run();
 ```
 </li>
+<li><b class="tab-title">Clojure</b>
+
+```clojure
+;; Use with-system function that iterates each individual entity, the return
+;; is the system entity, note that the body and bindings are just like with-query
+(vf/with-system w [:vf/name :my-system
+                   p [:mut Position]
+                   {:keys [x y]} Velocity]
+  (-> p
+      (update :x + x)
+      (update :y + y)))
+
+;; Run a system
+(vf/system-run (w :my-system))
+
+;; Or you can also define it using defsystem, it will create a function that 
+;; can be called with a world later 
+(vf/defsystem my-system w
+  [p [:mut Position]
+   {:keys [x y]} Velocity]
+  (-> p
+      (update :x + x)
+      (update :y + y)))
+
+(my-system w)
+```
+</li>
 </ul>
 </div>
 
@@ -1580,6 +1886,14 @@ moveSys.Entity.Destruct();
 println!("System: {}", move_sys.name());
 move_sys.add::<flecs::pipeline::OnUpdate>();
 move_sys.destruct();
+```
+</li>
+<li><b class="tab-title">Clojure</b>
+
+```clojure
+(vf/get-name (w :my-system))
+(conj ( :my-system) (flecs/EcsOnUpdate))
+(dissoc w :my-system)
 ```
 </li>
 </ul>
@@ -1642,6 +1956,19 @@ flecs::pipeline::PreStore;
 flecs::pipeline::OnStore;
 ```
 </li>
+<li><b class="tab-title">Clojure</b>
+
+```clojure
+(flecs/EcsOnLoad)
+(flecs/EcsPostLoad)
+(flecs/EcsPreUpdate)
+(flecs/EcsOnUpdate)
+(flecs/EcsOnValidate)
+(flecs/EcsPostUpdate)
+(flecs/EcsPreStore)
+(flecs/EcsOnStore)
+```
+</li>
 </ul>
 </div>
 
@@ -1700,6 +2027,38 @@ world
 world.progress();
 ```
 </li>
+<li><b class="tab-title">Clojure</b>
+
+```clojure
+;; Define the systems
+(vf/defsystem move w
+  [p Position
+   v Velocity
+   ;; This is the default phase.
+   :vf/phase (flecs/EcsOnUpdate)]
+  ...)
+
+(vf/defsystem transform w
+  [p Position
+   t Transform
+   :vf/phase (flecs/EcsPostUpdate)]
+  ...)
+
+(vf/defsystem render w
+  [t Transform
+   mesh Mesh
+   :vf/phase (flecs/EcsOnStore)]
+  ...)
+
+;; Add systems to the world
+(move w)
+(transform w)
+(render w)
+
+;; Run systems in default pipeline
+(vf/progress w)
+```
+</li>
 </ul>
 </div>
 
@@ -1735,6 +2094,13 @@ move_sys.add::<flecs::pipeline::OnUpdate>();
 move_sys.remove::<flecs::pipeline::PostUpdate>();
 ```
 </li>
+<li><b class="tab-title">Clojure</b>
+
+```clojure
+(conj (w :move) (flecs/EcsOnUpdate))
+(disj (w :move) (flecs/EcsPostUpdate))
+```
+</li>
 </ul>
 </div>
 
@@ -1753,7 +2119,7 @@ An example of an observer with two components:
 ```c
 ecs_observer(world, {
     .query.terms = { { ecs_id(Position) }, { ecs_id(Velocity) }},
-    .event = { EcsOnSet },
+    .events = { EcsOnSet },
     .callback = OnSetPosition
 });
 
@@ -1770,9 +2136,10 @@ ecs_set(world, e, Position, {20, 40}); // Invokes the observer
 ```cpp
 world.observer<Position, Velocity>("OnSetPosition")
     .event(flecs::OnSet)
-    .each( ... ); // Callback code is same as system
+    // Callback code is same as system
+    .each([](Position& p, Velocity& v) { });
 
-auto e = ecs.entity();     // Doesn't invoke the observer
+auto e = world.entity();     // Doesn't invoke the observer
 e.set<Position>({10, 20}); // Doesn't invoke the observer
 e.set<Velocity>({1, 2});   // Invokes the observer
 e.set<Position>({20, 30}); // Invokes the observer
@@ -1802,6 +2169,29 @@ let e = world.entity(); // Doesn't invoke the observer
 e.set(Position { x: 10.0, y: 20.0 }); // Doesn't invoke the observer
 e.set(Velocity { x: 1.0, y: 2.0 }); // Invokes the observer
 e.set(Position { x: 30.0, y: 40.0 }); // Invokes the observer
+```
+</li>
+<li><b class="tab-title">Clojure</b>
+
+```clojure
+;; Similar to with-system, but you have special configuration keys like :vf/events
+(vf/with-observer w [:vf/name ::on-set-position
+                     :vf/events #{:set}
+                     p Position
+                     v Velocity]
+  ...)
+
+;; Doesn't invoke the observer
+(merge w {:e []})
+
+;; Doesn't invoke the observer
+(merge w {:e [(Position [10 20])]})
+
+;; Invokes the observer
+(merge w {:e [(Velocity [1 2])]})
+
+;; Invokes the observer
+(merge w {:e [(Position [30 40])]})
 ```
 </li>
 </ul>
@@ -1889,7 +2279,13 @@ impl Module for MyModule {
 // Import code
 world.import::<MyModule>();
 ```
+</li>
+<li><b class="tab-title">Clojure</b>
 
+```clojure
+;; No wrapper for modules as Clojure has package namespacing already, but
+;; you can use the the Flecs C Api directly if needed (vf.c/...)
+```
 </li>
 </ul>
 </div>

@@ -8,7 +8,6 @@
 #ifdef FLECS_MODULE
 
 #include "../private_api.h"
-#include <ctype.h>
 
 char* flecs_module_path_from_c(
     const char *c_name)
@@ -215,6 +214,7 @@ ecs_entity_t ecs_module_init(
     }
     
     ecs_add_id(world, e, EcsModule);
+    ecs_add_id(world, e, EcsSingleton);
 
     ecs_component_desc_t private_desc = *desc;
     private_desc.entity = e;

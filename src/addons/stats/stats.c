@@ -253,8 +253,8 @@ void ecs_world_stats_get(
     ECS_COUNTER_RECORD(&s->frame.merge_count, t, world->info.merge_count_total);
     ECS_COUNTER_RECORD(&s->frame.rematch_count, t, world->info.rematch_count_total);
     ECS_COUNTER_RECORD(&s->frame.pipeline_build_count, t, world->info.pipeline_build_count_total);
-    ECS_COUNTER_RECORD(&s->frame.systems_ran, t, world->info.systems_ran_frame);
-    ECS_COUNTER_RECORD(&s->frame.observers_ran, t, world->info.observers_ran_frame);
+    ECS_COUNTER_RECORD(&s->frame.systems_ran, t, world->info.systems_ran_total);
+    ECS_COUNTER_RECORD(&s->frame.observers_ran, t, world->info.observers_ran_total);
     ECS_COUNTER_RECORD(&s->frame.event_emit_count, t, world->event_id);
 
     double delta_world_time = 
@@ -514,7 +514,7 @@ bool ecs_pipeline_stats_get(
     /* Count number of active systems */
     ecs_iter_t it = ecs_query_iter(stage, pq->query);
     while (ecs_query_next(&it)) {
-        if (flecs_id_record_get_table(pq->idr_inactive, it.table) != NULL) {
+        if (flecs_component_get_table(pq->cr_inactive, it.table) != NULL) {
             continue;
         }
         active_sys_count += it.count;
@@ -548,7 +548,7 @@ bool ecs_pipeline_stats_get(
             
             int32_t i, i_system = 0, ran_since_merge = 0;
             while (ecs_query_next(&it)) {
-                if (flecs_id_record_get_table(pq->idr_inactive, it.table) != NULL) {
+                if (flecs_component_get_table(pq->cr_inactive, it.table) != NULL) {
                     continue;
                 }
 

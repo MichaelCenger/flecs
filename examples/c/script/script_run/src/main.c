@@ -1,4 +1,5 @@
 #include <script_run.h>
+#include <stdio.h>
 
 /* This example shows how to run a script once. To see how to parse a script and
  * run it multiple times, see the script_parse_eval example. */
@@ -19,7 +20,7 @@ const char *script =
 int main(int argc, char *argv[]) {
     ecs_world_t *world = ecs_init_w_args(argc, argv);
 
-    if (ecs_script_run(world, "My script", script)) {
+    if (ecs_script_run(world, "My script", script, NULL)) {
         printf("script failed to run\n");
     }
 

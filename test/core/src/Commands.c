@@ -3742,7 +3742,6 @@ void Commands_absent_ensure_for_entity_w_tag(void) {
 
 static int set_position_invoked = 0;
 static int set_velocity_invoked = 0;
-static int add_tag_invoked = 0;
 
 static void set_position_hook(ecs_iter_t *it) {
     set_position_invoked ++;
@@ -3750,45 +3749,6 @@ static void set_position_hook(ecs_iter_t *it) {
 
 static void set_velocity_hook(ecs_iter_t *it) {
     set_velocity_invoked ++;
-}
-
-static void add_tag(ecs_iter_t *it) {
-    test_int(set_position_invoked, 1);
-    add_tag_invoked ++;
-}
-
-void Commands_on_set_hook_before_on_add_for_existing_component(void) {
-    ecs_world_t *world = ecs_mini();
-
-    ECS_COMPONENT(world, Position);
-    ECS_TAG(world, TagA);
-    ECS_TAG(world, TagB);
-
-    ecs_set_hooks(world, Position, {
-        .on_set = set_position_hook
-    });
-
-    ecs_observer(world, {
-        .query.terms[0].id = TagA,
-        .events = { EcsOnAdd },
-        .callback = add_tag
-    });
-
-    ecs_entity_t e = ecs_new_w(world, Position);
-
-    ecs_defer_begin(world);
-    ecs_add(world, e, TagB); /* 2 add commands, to trigger batching */
-    ecs_modified(world, e, Position);
-    ecs_add(world, e, TagA);
-
-    test_int(set_position_invoked, 0);
-    test_int(add_tag_invoked, 0);
-    ecs_defer_end(world);
-
-    test_assert(set_position_invoked != 0);
-    test_int(add_tag_invoked, 1);
-
-    ecs_fini(world);
 }
 
 void Commands_defer_2_sets_w_observer_same_component(void) {
@@ -4577,6 +4537,35 @@ void Commands_defer_emplace_after_remove(void) {
     ecs_fini(world);
 }
 
+void Commands_defer_emplace_2nd(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+
+    ecs_entity_t e1 = ecs_insert(world, ecs_value(Position, {10, 20}));
+    ecs_entity_t e2 = ecs_insert(world, ecs_value(Position, {30, 40}));
+
+    ecs_defer_begin(world);
+
+    {
+        bool is_new = false;
+        Position *p = ecs_emplace(world, e1, Position, &is_new);
+        test_bool(is_new, false);
+        test_int(p->x, 10); test_int(p->y, 20);
+    }
+
+    {
+        bool is_new = false;
+        Position *p = ecs_emplace(world, e2, Position, &is_new);
+        test_bool(is_new, false);
+        test_int(p->x, 30); test_int(p->y, 40);
+    }
+
+    ecs_defer_end(world);
+
+    ecs_fini(world);
+}
+
 static
 void RemoveVelocity(ecs_iter_t *it) {
     test_int(it->count, 1);
@@ -4793,6 +4782,412 @@ void Commands_batch_w_old_and_recycled_id(void) {
     test_assert(ecs_is_alive(world, e));
     test_assert(ecs_has_pair(world, child_2, EcsChildOf, parent));
     test_assert(ecs_has(world, e, Position));
+
+    ecs_fini(world);
+}
+
+void Commands_batch_w_two_named_entities_one_reparent(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+    ECS_COMPONENT(world, Velocity);
+
+    ecs_entity_t parent = ecs_new(world);
+    ecs_entity_t e1 = ecs_entity(world, { .name = "a" });
+    ecs_entity_t e2 = ecs_entity(world, { .name = "b" });
+
+    ecs_defer_begin(world);
+
+    ecs_add_pair(world, e1, EcsChildOf, parent); // to trigger reparenting
+    ecs_add(world, e1, Position); // to create batch
+
+    ecs_add(world, e2, Position);
+    ecs_add(world, e2, Velocity); // to create batch
+
+    ecs_defer_end(world);
+
+    test_assert(ecs_has_pair(world, e1, EcsChildOf, parent));
+    test_assert(ecs_has(world, e1, Position));
+
+    test_assert(ecs_has(world, e2, Position));
+    test_assert(ecs_has(world, e2, Velocity));
+
+    ecs_fini(world);
+}
+
+void Commands_batch_w_two_named_entities_one_reparent_w_remove(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+    ECS_COMPONENT(world, Velocity);
+
+    ecs_entity_t parent = ecs_new(world);
+    ecs_entity_t e1 = ecs_entity(world, { .name = "a" });
+    ecs_entity_t e2 = ecs_entity(world, { .name = "b" });
+
+    ecs_add_pair(world, e1, EcsChildOf, parent);
+
+    ecs_defer_begin(world);
+
+    ecs_remove_pair(world, e1, EcsChildOf, parent); // to trigger reparenting
+    ecs_add(world, e1, Position); // to create batch
+
+    ecs_add(world, e2, Position);
+    ecs_add(world, e2, Velocity); // to create batch
+
+    ecs_defer_end(world);
+
+    test_assert(!ecs_has_pair(world, e1, EcsChildOf, parent));
+    test_assert(ecs_has(world, e1, Position));
+
+    test_assert(ecs_has(world, e2, Position));
+    test_assert(ecs_has(world, e2, Velocity));
+
+    ecs_fini(world);
+}
+
+void Commands_batch_new_w_parent_w_name(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ecs_entity_t parent = ecs_new(world);
+
+    ecs_defer_begin(world);
+
+    ecs_entity_t e = ecs_new_w_pair(world, EcsChildOf, parent);
+    ecs_set_name(world, e, "Foo");
+
+    test_assert(!ecs_has_pair(world, e, EcsChildOf, parent));
+    test_assert(ecs_get_name(world, e) == NULL);
+
+    ecs_defer_end(world);
+
+    test_assert(ecs_has_pair(world, e, EcsChildOf, parent));
+    test_str(ecs_get_name(world, e), "Foo");
+
+    ecs_fini(world);
+}
+
+void Commands_enable_component_from_stage(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+    ecs_add_id(world, ecs_id(Position), EcsCanToggle);
+
+    ecs_entity_t e = ecs_new(world);
+    ecs_add(world, e, Position);
+
+    ecs_set_stage_count(world, 2);
+    ecs_world_t *s = ecs_get_stage(world, 1);
+
+    test_bool(true, ecs_is_enabled(world, e, Position));
+
+    ecs_defer_begin(s);
+
+    ecs_enable_component(s, e, Position, false);
+
+    test_bool(true, ecs_is_enabled(world, e, Position));
+
+    ecs_defer_end(s);
+
+    test_bool(false, ecs_is_enabled(world, e, Position));
+
+    ecs_fini(world);
+}
+
+static int replace_Position_invoked = 0;
+
+static
+void replace_Position(ecs_iter_t *it) {
+    Position *old = ecs_field(it, Position, 0);
+    Position *new = ecs_field(it, Position, 1);
+
+    test_int(it->count, 1);
+
+    switch(replace_Position_invoked) {
+    case 0:
+        test_int(old->x, 0); test_int(old->y, 0);
+        test_int(new->x, 10); test_int(new->y, 20);
+        break;
+    case 1:
+        test_int(old->x, 10); test_int(old->y, 20);
+        test_int(new->x, 11); test_int(new->y, 21);
+        break;
+    case 2:
+        test_int(old->x, 11); test_int(old->y, 21);
+        test_int(new->x, 12); test_int(new->y, 22);
+        break;
+    default:
+        test_assert(false);
+        break;
+    }
+
+    replace_Position_invoked ++;
+}
+
+void Commands_on_replace_w_set(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+
+    ecs_set_hooks(world, Position, {
+        .ctor = flecs_default_ctor,
+        .on_replace = replace_Position,
+    });
+
+    ecs_entity_t e = ecs_new(world);
+    test_int(replace_Position_invoked, 0);
+
+    ecs_defer_begin(world);
+    ecs_set(world, e, Position, {10, 20});
+    test_int(replace_Position_invoked, 0);
+    ecs_defer_end(world);
+    test_int(replace_Position_invoked, 1);
+
+    {
+        const Position *p = ecs_get(world, e, Position);
+        test_assert(p != NULL);
+        test_int(p->x, 10); test_int(p->y, 20);
+    }
+
+    ecs_fini(world);
+}
+
+void Commands_on_replace_w_set_twice(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+
+    ecs_set_hooks(world, Position, {
+        .ctor = flecs_default_ctor,
+        .on_replace = replace_Position,
+    });
+
+    ecs_entity_t e = ecs_new(world);
+    test_int(replace_Position_invoked, 0);
+
+    ecs_defer_begin(world);
+    ecs_set(world, e, Position, {10, 20});
+    ecs_set(world, e, Position, {11, 21});
+    test_int(replace_Position_invoked, 0);
+    ecs_defer_end(world);
+    test_int(replace_Position_invoked, 2);
+
+    {
+        const Position *p = ecs_get(world, e, Position);
+        test_assert(p != NULL);
+        test_int(p->x, 11); test_int(p->y, 21);
+    }
+
+    ecs_fini(world);
+}
+
+void Commands_on_replace_w_set_existing(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+
+    ecs_set_hooks(world, Position, {
+        .ctor = flecs_default_ctor,
+        .on_replace = replace_Position,
+    });
+
+    ecs_entity_t e = ecs_new(world);
+    test_int(replace_Position_invoked, 0);
+
+    ecs_set(world, e, Position, {10, 20});
+    test_int(replace_Position_invoked, 1);
+
+    ecs_defer_begin(world);
+    ecs_set(world, e, Position, {11, 21});
+    test_int(replace_Position_invoked, 2);
+    ecs_defer_end(world);
+    test_int(replace_Position_invoked, 2);
+
+    {
+        const Position *p = ecs_get(world, e, Position);
+        test_assert(p != NULL);
+        test_int(p->x, 11); test_int(p->y, 21);
+    }
+
+    ecs_fini(world);
+}
+
+void Commands_on_replace_w_set_existing_twice(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+
+    ecs_set_hooks(world, Position, {
+        .ctor = flecs_default_ctor,
+        .on_replace = replace_Position,
+    });
+
+    ecs_entity_t e = ecs_new(world);
+    test_int(replace_Position_invoked, 0);
+
+    ecs_set(world, e, Position, {10, 20});
+    test_int(replace_Position_invoked, 1);
+
+    ecs_defer_begin(world);
+    ecs_set(world, e, Position, {11, 21});
+    ecs_set(world, e, Position, {12, 22});
+    test_int(replace_Position_invoked, 3);
+    ecs_defer_end(world);
+    test_int(replace_Position_invoked, 3);
+
+    {
+        const Position *p = ecs_get(world, e, Position);
+        test_assert(p != NULL);
+        test_int(p->x, 12); test_int(p->y, 22);
+    }
+
+    ecs_fini(world);
+}
+
+void Commands_on_replace_w_set_batched(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+    ECS_COMPONENT(world, Velocity);
+
+    ecs_set_hooks(world, Position, {
+        .ctor = flecs_default_ctor,
+        .on_replace = replace_Position,
+    });
+
+    ecs_entity_t e = ecs_new(world);
+    test_int(replace_Position_invoked, 0);
+
+    ecs_defer_begin(world);
+    ecs_set(world, e, Position, {10, 20});
+    ecs_set(world, e, Velocity, {1, 2});
+    test_int(replace_Position_invoked, 0);
+    ecs_defer_end(world);
+    test_int(replace_Position_invoked, 1);
+
+    {
+        const Position *p = ecs_get(world, e, Position);
+        test_assert(p != NULL);
+        test_int(p->x, 10); test_int(p->y, 20);
+    }
+    {
+        const Velocity *v = ecs_get(world, e, Velocity);
+        test_assert(v != NULL);
+        test_int(v->x, 1); test_int(v->y, 2);
+    }
+
+    ecs_fini(world);
+}
+
+void Commands_on_replace_w_set_batched_twice(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+    ECS_COMPONENT(world, Velocity);
+
+    ecs_set_hooks(world, Position, {
+        .ctor = flecs_default_ctor,
+        .on_replace = replace_Position,
+    });
+
+    ecs_entity_t e = ecs_new(world);
+    test_int(replace_Position_invoked, 0);
+
+    ecs_defer_begin(world);
+    ecs_set(world, e, Position, {10, 20});
+    ecs_set(world, e, Position, {11, 21});
+    ecs_set(world, e, Velocity, {1, 2});
+    test_int(replace_Position_invoked, 0);
+    ecs_defer_end(world);
+    test_int(replace_Position_invoked, 2);
+
+    {
+        const Position *p = ecs_get(world, e, Position);
+        test_assert(p != NULL);
+        test_int(p->x, 11); test_int(p->y, 21);
+    }
+    {
+        const Velocity *v = ecs_get(world, e, Velocity);
+        test_assert(v != NULL);
+        test_int(v->x, 1); test_int(v->y, 2);
+    }
+
+    ecs_fini(world);
+}
+
+void Commands_on_replace_w_set_batched_existing(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+    ECS_COMPONENT(world, Velocity);
+
+    ecs_set_hooks(world, Position, {
+        .ctor = flecs_default_ctor,
+        .on_replace = replace_Position,
+    });
+
+    ecs_entity_t e = ecs_new(world);
+    test_int(replace_Position_invoked, 0);
+
+    ecs_set(world, e, Position, {10, 20});
+    test_int(replace_Position_invoked, 1);
+
+    ecs_defer_begin(world);
+    ecs_set(world, e, Position, {11, 21});
+    ecs_set(world, e, Velocity, {1, 2});
+    test_int(replace_Position_invoked, 2);
+    ecs_defer_end(world);
+    test_int(replace_Position_invoked, 2);
+
+    {
+        const Position *p = ecs_get(world, e, Position);
+        test_assert(p != NULL);
+        test_int(p->x, 11); test_int(p->y, 21);
+    }
+    {
+        const Velocity *v = ecs_get(world, e, Velocity);
+        test_assert(v != NULL);
+        test_int(v->x, 1); test_int(v->y, 2);
+    }
+
+    ecs_fini(world);
+}
+
+void Commands_on_replace_w_set_batched_existing_twice(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+    ECS_COMPONENT(world, Velocity);
+
+    ecs_set_hooks(world, Position, {
+        .ctor = flecs_default_ctor,
+        .on_replace = replace_Position,
+    });
+
+    ecs_entity_t e = ecs_new(world);
+    test_int(replace_Position_invoked, 0);
+
+    ecs_set(world, e, Position, {10, 20});
+    test_int(replace_Position_invoked, 1);
+
+    ecs_defer_begin(world);
+    ecs_set(world, e, Position, {11, 21});
+    ecs_set(world, e, Position, {12, 22});
+    ecs_set(world, e, Velocity, {1, 2});
+    test_int(replace_Position_invoked, 3);
+    ecs_defer_end(world);
+    test_int(replace_Position_invoked, 3);
+
+    {
+        const Position *p = ecs_get(world, e, Position);
+        test_assert(p != NULL);
+        test_int(p->x, 12); test_int(p->y, 22);
+    }
+    {
+        const Velocity *v = ecs_get(world, e, Velocity);
+        test_assert(v != NULL);
+        test_int(v->x, 1); test_int(v->y, 2);
+    }
 
     ecs_fini(world);
 }

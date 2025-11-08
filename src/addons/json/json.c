@@ -4,7 +4,6 @@
  */
 
 #include "json.h"
-#include <ctype.h>
 
 #ifdef FLECS_JSON
 
@@ -219,6 +218,7 @@ const char* flecs_json_expect(
             ecs_parser_error(desc->name, desc->expr, json - desc->expr, 
                 "expected %s, got %s",
                 flecs_json_token_str(token_kind), flecs_json_token_str(kind));
+            flecs_dump_backtrace(stdout);
             return NULL;
         }
     }
@@ -489,6 +489,11 @@ void flecs_json_string_escape(
     ecs_strbuf_t *buf,
     const char *value)
 {
+    if (!value) {
+        ecs_strbuf_appendlit(buf, "null");
+        return;
+    }
+
     ecs_size_t length = flecs_stresc(NULL, 0, '"', value);
     if (length == ecs_os_strlen(value)) {
         ecs_strbuf_appendch(buf, '"');
@@ -695,7 +700,7 @@ void flecs_json_id_member(
 }
 
 ecs_primitive_kind_t flecs_json_op_to_primitive_kind(
-    ecs_meta_type_op_kind_t kind) 
+    ecs_meta_op_kind_t kind) 
 {
     return kind - EcsOpPrimitive;
 }

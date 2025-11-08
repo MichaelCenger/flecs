@@ -20,13 +20,13 @@ int ecs_entity_to_json_buf(
         return -1;
     }
 
-    /* Cache id record for flecs.doc ids */
+    /* Cache component record for flecs.doc ids */
     ecs_json_ser_ctx_t ser_ctx;
     ecs_os_zeromem(&ser_ctx);
 #ifdef FLECS_DOC
-    ser_ctx.idr_doc_name = flecs_id_record_get(world, 
+    ser_ctx.cr_doc_name = flecs_components_get(world, 
         ecs_pair_t(EcsDocDescription, EcsName));
-    ser_ctx.idr_doc_color = flecs_id_record_get(world, 
+    ser_ctx.cr_doc_color = flecs_components_get(world, 
         ecs_pair_t(EcsDocDescription, EcsDocColor));
 #endif
 
@@ -66,7 +66,8 @@ int ecs_entity_to_json_buf(
         .serialize_alerts =       desc ? desc->serialize_alerts : false,
         .serialize_full_paths =   desc ? desc->serialize_full_paths : true,
         .serialize_inherited =    desc ? desc->serialize_inherited : false,
-        .serialize_type_info =    desc ? desc->serialize_type_info : false
+        .serialize_type_info =    desc ? desc->serialize_type_info : false,
+        .component_filter =       desc ? desc->component_filter : NULL,
     };
 
     if (flecs_json_serialize_iter_result(

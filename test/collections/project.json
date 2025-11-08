@@ -70,7 +70,8 @@
                 "try_low_after_ensure_high",
                 "is_alive_low_after_ensure_high",
                 "remove_low_after_ensure_high",
-                "ensure_skip_generation"
+                "recreate_pages_after_shrink",
+                "create_low_page_after_high"
             ]
         }, {
             "id": "Strbuf",

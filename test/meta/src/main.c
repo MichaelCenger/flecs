@@ -84,6 +84,8 @@ void EnumTypes_enum_w_underlying_u8(void);
 void EnumTypes_enum_w_underlying_u16(void);
 void EnumTypes_enum_w_underlying_u32(void);
 void EnumTypes_enum_w_underlying_u64(void);
+void EnumTypes_set_enum(void);
+void EnumTypes_set_enum_w_underlying_type(void);
 
 // Testsuite 'BitmaskTypes'
 void BitmaskTypes_bitmask_1_constant(void);
@@ -104,6 +106,8 @@ void RuntimeTypes_move(void);
 void RuntimeTypes_move_illegal(void);
 void RuntimeTypes_copy(void);
 void RuntimeTypes_copy_illegal(void);
+void RuntimeTypes_cmp_illegal(void);
+void RuntimeTypes_equals_illegal(void);
 void RuntimeTypes_trivial_array(void);
 void RuntimeTypes_array_ctor(void);
 void RuntimeTypes_array_ctor_illegal(void);
@@ -113,8 +117,10 @@ void RuntimeTypes_array_move(void);
 void RuntimeTypes_array_move_illegal(void);
 void RuntimeTypes_array_copy(void);
 void RuntimeTypes_array_copy_illegal(void);
+void RuntimeTypes_array_cmp_illegal(void);
 void RuntimeTypes_vector_lifecycle(void);
 void RuntimeTypes_vector_lifecycle_trivial_type(void);
+void RuntimeTypes_vector_cmp_illegal(void);
 void RuntimeTypes_opaque(void);
 void RuntimeTypes_struct_with_ints(void);
 void RuntimeTypes_struct_with_strings(void);
@@ -424,6 +430,18 @@ void Cursor_array_struct_3(void);
 void Cursor_array_move_primitive(void);
 void Cursor_array_move_struct(void);
 void Cursor_array_move_out_of_range(void);
+void Cursor_vector_i32_0(void);
+void Cursor_vector_i32_1(void);
+void Cursor_vector_i32_1_next(void);
+void Cursor_vector_i32_3(void);
+void Cursor_vector_i32_empty_after_3(void);
+void Cursor_vector_struct_3(void);
+void Cursor_vector_move_primitive(void);
+void Cursor_vector_move_struct(void);
+void Cursor_struct_w_vector_i32_3(void);
+void Cursor_struct_w_vector_struct_3(void);
+void Cursor_struct_w_vector_move_primitive(void);
+void Cursor_struct_w_vector_move_struct(void);
 void Cursor_opaque_set_bool(void);
 void Cursor_opaque_set_char(void);
 void Cursor_opaque_set_int(void);
@@ -610,6 +628,11 @@ void DeserializeFromJson_deser_unknown_component_w_spaces(void);
 void DeserializeFromJson_deser_unknown_component_no_spaces(void);
 void DeserializeFromJson_deser_unknown_component_w_spaces_strict(void);
 void DeserializeFromJson_deser_unknown_component_no_spaces_strict(void);
+void DeserializeFromJson_deser_unknown_member(void);
+void DeserializeFromJson_deser_valid_after_unknown_member(void);
+void DeserializeFromJson_deser_unknown_member_w_strict(void);
+void DeserializeFromJson_deser_pretty_printed_identifier_pair(void);
+void DeserializeFromJson_ser_deser_alias(void);
 
 // Testsuite 'SerializeToJson'
 void SerializeToJson_struct_bool(void);
@@ -657,6 +680,16 @@ void SerializeToJson_array_array_i32_3(void);
 void SerializeToJson_vector_i32_3(void);
 void SerializeToJson_vector_struct_i32_i32(void);
 void SerializeToJson_vector_array_i32_3(void);
+void SerializeToJson_enum_underlying_i8(void);
+void SerializeToJson_enum_underlying_i16(void);
+void SerializeToJson_enum_underlying_i32(void);
+void SerializeToJson_enum_underlying_i64(void);
+void SerializeToJson_enum_underlying_iptr(void);
+void SerializeToJson_enum_underlying_u8(void);
+void SerializeToJson_enum_underlying_u16(void);
+void SerializeToJson_enum_underlying_u32(void);
+void SerializeToJson_enum_underlying_u64(void);
+void SerializeToJson_enum_underlying_uptr(void);
 void SerializeToJson_serialize_from_stage(void);
 
 // Testsuite 'SerializeEntityToJson'
@@ -728,6 +761,7 @@ void SerializeEntityToJson_serialize_sparse_inherited(void);
 void SerializeEntityToJson_serialize_sparse_inherited_pair(void);
 void SerializeEntityToJson_serialize_sparse_inherited_mixed(void);
 void SerializeEntityToJson_serialize_sparse_w_type_info(void);
+void SerializeEntityToJson_serialize_sparse_tag(void);
 void SerializeEntityToJson_serialize_auto_override_w_inherited(void);
 void SerializeEntityToJson_serialize_auto_override(void);
 void SerializeEntityToJson_serialize_auto_override_pair(void);
@@ -735,6 +769,11 @@ void SerializeEntityToJson_serialize_auto_override_fullpath(void);
 void SerializeEntityToJson_serialize_auto_override_pair_fullpath(void);
 void SerializeEntityToJson_serialize_toggle(void);
 void SerializeEntityToJson_serialize_toggle_pair(void);
+void SerializeEntityToJson_serialize_null_doc_name(void);
+void SerializeEntityToJson_serialize_base_w_invalid_component(void);
+void SerializeEntityToJson_serialize_w_blacklist(void);
+void SerializeEntityToJson_serialize_w_allow_blacklist(void);
+void SerializeEntityToJson_serialize_w_partial_blacklist(void);
 
 // Testsuite 'SerializeIterToJson'
 void SerializeIterToJson_serialize_1_comps_empty(void);
@@ -801,6 +840,7 @@ void SerializeIterToJson_serialize_world(void);
 void SerializeIterToJson_serialize_vars_for_query(void);
 void SerializeIterToJson_serialize_var_labels_for_query(void);
 void SerializeIterToJson_serialize_null_doc_name(void);
+void SerializeIterToJson_serialize_overwrite_null_doc_name(void);
 void SerializeIterToJson_serialize_rule_w_optional(void);
 void SerializeIterToJson_serialize_rule_w_optional_component(void);
 void SerializeIterToJson_serialize_entity_w_flecs_core_parent(void);
@@ -873,6 +913,7 @@ void SerializeIterToRowJson_serialize_w_field_info_pair_w_not_tag(void);
 void SerializeIterToRowJson_serialize_w_field_info_pair_w_not_pair(void);
 void SerializeIterToRowJson_serialize_w_field_info_pair_w_not_component(void);
 void SerializeIterToRowJson_serialize_w_field_info_w_or(void);
+void SerializeIterToRowJson_serialize_w_field_info_w_none(void);
 void SerializeIterToRowJson_serialize_recycled_id(void);
 void SerializeIterToRowJson_serialize_entity_w_flecs_core_parent(void);
 
@@ -986,10 +1027,23 @@ void OpaqueTypes_deser_uint_from_json(void);
 void OpaqueTypes_deser_float_from_json(void);
 void OpaqueTypes_deser_string_from_json(void);
 void OpaqueTypes_deser_entity_from_json(void);
+void OpaqueTypes_deser_struct_from_json(void);
+void OpaqueTypes_deser_struct_w_opaque_struct_from_json(void);
+void OpaqueTypes_deser_struct_w_opaque_array_from_json(void);
+void OpaqueTypes_deser_struct_w_opaque_vector_from_json(void);
+void OpaqueTypes_deser_array_from_json(void);
+void OpaqueTypes_deser_vector_from_json(void);
+void OpaqueTypes_deser_0_vector_from_json(void);
+void OpaqueTypes_deser_0_into_vector_from_json(void);
+void OpaqueTypes_deser_string_vector_from_json(void);
+void OpaqueTypes_deser_struct_vector_from_json(void);
 void OpaqueTypes_ser_deser_world_w_ser_opaque(void);
 void OpaqueTypes_ser_deser_entity(void);
 void OpaqueTypes_ser_deser_0_entity(void);
 void OpaqueTypes_const_string(void);
+void OpaqueTypes_anonymous_opaque_as_type_parent(void);
+void OpaqueTypes_named_opaque_as_type_parent(void);
+void OpaqueTypes_parented_opaque_as_type_parent(void);
 
 // Testsuite 'Misc'
 void Misc_primitive_from_stage(void);
@@ -1032,6 +1086,55 @@ void Misc_opaque_from_suspend_defer(void);
 void Misc_unit_from_suspend_defer(void);
 void Misc_unit_prefix_from_suspend_defer(void);
 void Misc_quantity_from_suspend_defer(void);
+
+// Testsuite 'PrimitiveCompare'
+void PrimitiveCompare_bool(void);
+void PrimitiveCompare_char(void);
+void PrimitiveCompare_byte(void);
+void PrimitiveCompare_u8(void);
+void PrimitiveCompare_u16(void);
+void PrimitiveCompare_u32(void);
+void PrimitiveCompare_u64(void);
+void PrimitiveCompare_uptr(void);
+void PrimitiveCompare_i8(void);
+void PrimitiveCompare_i16(void);
+void PrimitiveCompare_i32(void);
+void PrimitiveCompare_i64(void);
+void PrimitiveCompare_iptr(void);
+void PrimitiveCompare_f32(void);
+void PrimitiveCompare_f64(void);
+void PrimitiveCompare_entity(void);
+void PrimitiveCompare_id(void);
+void PrimitiveCompare_string(void);
+void PrimitiveCompare_const_string(void);
+
+// Testsuite 'RttCompare'
+void RttCompare_struct_with_ints(void);
+void RttCompare_struct_with_strings(void);
+void RttCompare_struct_with_opaque(void);
+void RttCompare_nested_struct_with_strings(void);
+void RttCompare_struct_with_array_of_strings(void);
+void RttCompare_struct_with_array_of_array_of_strings(void);
+void RttCompare_struct_with_vector_of_ints(void);
+void RttCompare_struct_with_vector_of_strings(void);
+void RttCompare_nested_struct_with_vector_of_ints(void);
+void RttCompare_nested_struct_with_vector_of_strings(void);
+void RttCompare_array_of_ints(void);
+void RttCompare_array_of_strings(void);
+void RttCompare_array_of_struct_with_ints(void);
+void RttCompare_array_of_struct_with_strings(void);
+void RttCompare_array_of_struct_with_opaques(void);
+void RttCompare_array_of_array_of_strings(void);
+void RttCompare_array_of_array_of_struct_with_strings(void);
+void RttCompare_array_of_vectors_of_ints(void);
+void RttCompare_array_of_vectors_of_strings(void);
+void RttCompare_array_of_opaque(void);
+void RttCompare_vector_of_ints(void);
+void RttCompare_vector_of_strings(void);
+void RttCompare_vector_of_struct_with_ints(void);
+void RttCompare_vector_of_struct_with_strings(void);
+void RttCompare_vector_of_arrays_of_strings(void);
+void RttCompare_vector_of_opaque(void);
 
 bake_test_case PrimitiveTypes_testcases[] = {
     {
@@ -1328,6 +1431,14 @@ bake_test_case EnumTypes_testcases[] = {
     {
         "enum_w_underlying_u64",
         EnumTypes_enum_w_underlying_u64
+    },
+    {
+        "set_enum",
+        EnumTypes_set_enum
+    },
+    {
+        "set_enum_w_underlying_type",
+        EnumTypes_set_enum_w_underlying_type
     }
 };
 
@@ -1400,6 +1511,14 @@ bake_test_case RuntimeTypes_testcases[] = {
         RuntimeTypes_copy_illegal
     },
     {
+        "cmp_illegal",
+        RuntimeTypes_cmp_illegal
+    },
+    {
+        "equals_illegal",
+        RuntimeTypes_equals_illegal
+    },
+    {
         "trivial_array",
         RuntimeTypes_trivial_array
     },
@@ -1436,12 +1555,20 @@ bake_test_case RuntimeTypes_testcases[] = {
         RuntimeTypes_array_copy_illegal
     },
     {
+        "array_cmp_illegal",
+        RuntimeTypes_array_cmp_illegal
+    },
+    {
         "vector_lifecycle",
         RuntimeTypes_vector_lifecycle
     },
     {
         "vector_lifecycle_trivial_type",
         RuntimeTypes_vector_lifecycle_trivial_type
+    },
+    {
+        "vector_cmp_illegal",
+        RuntimeTypes_vector_cmp_illegal
     },
     {
         "opaque",
@@ -2645,6 +2772,54 @@ bake_test_case Cursor_testcases[] = {
         Cursor_array_move_out_of_range
     },
     {
+        "vector_i32_0",
+        Cursor_vector_i32_0
+    },
+    {
+        "vector_i32_1",
+        Cursor_vector_i32_1
+    },
+    {
+        "vector_i32_1_next",
+        Cursor_vector_i32_1_next
+    },
+    {
+        "vector_i32_3",
+        Cursor_vector_i32_3
+    },
+    {
+        "vector_i32_empty_after_3",
+        Cursor_vector_i32_empty_after_3
+    },
+    {
+        "vector_struct_3",
+        Cursor_vector_struct_3
+    },
+    {
+        "vector_move_primitive",
+        Cursor_vector_move_primitive
+    },
+    {
+        "vector_move_struct",
+        Cursor_vector_move_struct
+    },
+    {
+        "struct_w_vector_i32_3",
+        Cursor_struct_w_vector_i32_3
+    },
+    {
+        "struct_w_vector_struct_3",
+        Cursor_struct_w_vector_struct_3
+    },
+    {
+        "struct_w_vector_move_primitive",
+        Cursor_struct_w_vector_move_primitive
+    },
+    {
+        "struct_w_vector_move_struct",
+        Cursor_struct_w_vector_move_struct
+    },
+    {
         "opaque_set_bool",
         Cursor_opaque_set_bool
     },
@@ -3382,6 +3557,26 @@ bake_test_case DeserializeFromJson_testcases[] = {
     {
         "deser_unknown_component_no_spaces_strict",
         DeserializeFromJson_deser_unknown_component_no_spaces_strict
+    },
+    {
+        "deser_unknown_member",
+        DeserializeFromJson_deser_unknown_member
+    },
+    {
+        "deser_valid_after_unknown_member",
+        DeserializeFromJson_deser_valid_after_unknown_member
+    },
+    {
+        "deser_unknown_member_w_strict",
+        DeserializeFromJson_deser_unknown_member_w_strict
+    },
+    {
+        "deser_pretty_printed_identifier_pair",
+        DeserializeFromJson_deser_pretty_printed_identifier_pair
+    },
+    {
+        "ser_deser_alias",
+        DeserializeFromJson_ser_deser_alias
     }
 };
 
@@ -3565,6 +3760,46 @@ bake_test_case SerializeToJson_testcases[] = {
     {
         "vector_array_i32_3",
         SerializeToJson_vector_array_i32_3
+    },
+    {
+        "enum_underlying_i8",
+        SerializeToJson_enum_underlying_i8
+    },
+    {
+        "enum_underlying_i16",
+        SerializeToJson_enum_underlying_i16
+    },
+    {
+        "enum_underlying_i32",
+        SerializeToJson_enum_underlying_i32
+    },
+    {
+        "enum_underlying_i64",
+        SerializeToJson_enum_underlying_i64
+    },
+    {
+        "enum_underlying_iptr",
+        SerializeToJson_enum_underlying_iptr
+    },
+    {
+        "enum_underlying_u8",
+        SerializeToJson_enum_underlying_u8
+    },
+    {
+        "enum_underlying_u16",
+        SerializeToJson_enum_underlying_u16
+    },
+    {
+        "enum_underlying_u32",
+        SerializeToJson_enum_underlying_u32
+    },
+    {
+        "enum_underlying_u64",
+        SerializeToJson_enum_underlying_u64
+    },
+    {
+        "enum_underlying_uptr",
+        SerializeToJson_enum_underlying_uptr
     },
     {
         "serialize_from_stage",
@@ -3846,6 +4081,10 @@ bake_test_case SerializeEntityToJson_testcases[] = {
         SerializeEntityToJson_serialize_sparse_w_type_info
     },
     {
+        "serialize_sparse_tag",
+        SerializeEntityToJson_serialize_sparse_tag
+    },
+    {
         "serialize_auto_override_w_inherited",
         SerializeEntityToJson_serialize_auto_override_w_inherited
     },
@@ -3872,6 +4111,26 @@ bake_test_case SerializeEntityToJson_testcases[] = {
     {
         "serialize_toggle_pair",
         SerializeEntityToJson_serialize_toggle_pair
+    },
+    {
+        "serialize_null_doc_name",
+        SerializeEntityToJson_serialize_null_doc_name
+    },
+    {
+        "serialize_base_w_invalid_component",
+        SerializeEntityToJson_serialize_base_w_invalid_component
+    },
+    {
+        "serialize_w_blacklist",
+        SerializeEntityToJson_serialize_w_blacklist
+    },
+    {
+        "serialize_w_allow_blacklist",
+        SerializeEntityToJson_serialize_w_allow_blacklist
+    },
+    {
+        "serialize_w_partial_blacklist",
+        SerializeEntityToJson_serialize_w_partial_blacklist
     }
 };
 
@@ -4131,6 +4390,10 @@ bake_test_case SerializeIterToJson_testcases[] = {
     {
         "serialize_null_doc_name",
         SerializeIterToJson_serialize_null_doc_name
+    },
+    {
+        "serialize_overwrite_null_doc_name",
+        SerializeIterToJson_serialize_overwrite_null_doc_name
     },
     {
         "serialize_rule_w_optional",
@@ -4414,6 +4677,10 @@ bake_test_case SerializeIterToRowJson_testcases[] = {
     {
         "serialize_w_field_info_w_or",
         SerializeIterToRowJson_serialize_w_field_info_w_or
+    },
+    {
+        "serialize_w_field_info_w_none",
+        SerializeIterToRowJson_serialize_w_field_info_w_none
     },
     {
         "serialize_recycled_id",
@@ -4848,6 +5115,46 @@ bake_test_case OpaqueTypes_testcases[] = {
         OpaqueTypes_deser_entity_from_json
     },
     {
+        "deser_struct_from_json",
+        OpaqueTypes_deser_struct_from_json
+    },
+    {
+        "deser_struct_w_opaque_struct_from_json",
+        OpaqueTypes_deser_struct_w_opaque_struct_from_json
+    },
+    {
+        "deser_struct_w_opaque_array_from_json",
+        OpaqueTypes_deser_struct_w_opaque_array_from_json
+    },
+    {
+        "deser_struct_w_opaque_vector_from_json",
+        OpaqueTypes_deser_struct_w_opaque_vector_from_json
+    },
+    {
+        "deser_array_from_json",
+        OpaqueTypes_deser_array_from_json
+    },
+    {
+        "deser_vector_from_json",
+        OpaqueTypes_deser_vector_from_json
+    },
+    {
+        "deser_0_vector_from_json",
+        OpaqueTypes_deser_0_vector_from_json
+    },
+    {
+        "deser_0_into_vector_from_json",
+        OpaqueTypes_deser_0_into_vector_from_json
+    },
+    {
+        "deser_string_vector_from_json",
+        OpaqueTypes_deser_string_vector_from_json
+    },
+    {
+        "deser_struct_vector_from_json",
+        OpaqueTypes_deser_struct_vector_from_json
+    },
+    {
         "ser_deser_world_w_ser_opaque",
         OpaqueTypes_ser_deser_world_w_ser_opaque
     },
@@ -4862,6 +5169,18 @@ bake_test_case OpaqueTypes_testcases[] = {
     {
         "const_string",
         OpaqueTypes_const_string
+    },
+    {
+        "anonymous_opaque_as_type_parent",
+        OpaqueTypes_anonymous_opaque_as_type_parent
+    },
+    {
+        "named_opaque_as_type_parent",
+        OpaqueTypes_named_opaque_as_type_parent
+    },
+    {
+        "parented_opaque_as_type_parent",
+        OpaqueTypes_parented_opaque_as_type_parent
     }
 };
 
@@ -5028,6 +5347,192 @@ bake_test_case Misc_testcases[] = {
     }
 };
 
+bake_test_case PrimitiveCompare_testcases[] = {
+    {
+        "bool",
+        PrimitiveCompare_bool
+    },
+    {
+        "char",
+        PrimitiveCompare_char
+    },
+    {
+        "byte",
+        PrimitiveCompare_byte
+    },
+    {
+        "u8",
+        PrimitiveCompare_u8
+    },
+    {
+        "u16",
+        PrimitiveCompare_u16
+    },
+    {
+        "u32",
+        PrimitiveCompare_u32
+    },
+    {
+        "u64",
+        PrimitiveCompare_u64
+    },
+    {
+        "uptr",
+        PrimitiveCompare_uptr
+    },
+    {
+        "i8",
+        PrimitiveCompare_i8
+    },
+    {
+        "i16",
+        PrimitiveCompare_i16
+    },
+    {
+        "i32",
+        PrimitiveCompare_i32
+    },
+    {
+        "i64",
+        PrimitiveCompare_i64
+    },
+    {
+        "iptr",
+        PrimitiveCompare_iptr
+    },
+    {
+        "f32",
+        PrimitiveCompare_f32
+    },
+    {
+        "f64",
+        PrimitiveCompare_f64
+    },
+    {
+        "entity",
+        PrimitiveCompare_entity
+    },
+    {
+        "id",
+        PrimitiveCompare_id
+    },
+    {
+        "string",
+        PrimitiveCompare_string
+    },
+    {
+        "const_string",
+        PrimitiveCompare_const_string
+    }
+};
+
+bake_test_case RttCompare_testcases[] = {
+    {
+        "struct_with_ints",
+        RttCompare_struct_with_ints
+    },
+    {
+        "struct_with_strings",
+        RttCompare_struct_with_strings
+    },
+    {
+        "struct_with_opaque",
+        RttCompare_struct_with_opaque
+    },
+    {
+        "nested_struct_with_strings",
+        RttCompare_nested_struct_with_strings
+    },
+    {
+        "struct_with_array_of_strings",
+        RttCompare_struct_with_array_of_strings
+    },
+    {
+        "struct_with_array_of_array_of_strings",
+        RttCompare_struct_with_array_of_array_of_strings
+    },
+    {
+        "struct_with_vector_of_ints",
+        RttCompare_struct_with_vector_of_ints
+    },
+    {
+        "struct_with_vector_of_strings",
+        RttCompare_struct_with_vector_of_strings
+    },
+    {
+        "nested_struct_with_vector_of_ints",
+        RttCompare_nested_struct_with_vector_of_ints
+    },
+    {
+        "nested_struct_with_vector_of_strings",
+        RttCompare_nested_struct_with_vector_of_strings
+    },
+    {
+        "array_of_ints",
+        RttCompare_array_of_ints
+    },
+    {
+        "array_of_strings",
+        RttCompare_array_of_strings
+    },
+    {
+        "array_of_struct_with_ints",
+        RttCompare_array_of_struct_with_ints
+    },
+    {
+        "array_of_struct_with_strings",
+        RttCompare_array_of_struct_with_strings
+    },
+    {
+        "array_of_struct_with_opaques",
+        RttCompare_array_of_struct_with_opaques
+    },
+    {
+        "array_of_array_of_strings",
+        RttCompare_array_of_array_of_strings
+    },
+    {
+        "array_of_array_of_struct_with_strings",
+        RttCompare_array_of_array_of_struct_with_strings
+    },
+    {
+        "array_of_vectors_of_ints",
+        RttCompare_array_of_vectors_of_ints
+    },
+    {
+        "array_of_vectors_of_strings",
+        RttCompare_array_of_vectors_of_strings
+    },
+    {
+        "array_of_opaque",
+        RttCompare_array_of_opaque
+    },
+    {
+        "vector_of_ints",
+        RttCompare_vector_of_ints
+    },
+    {
+        "vector_of_strings",
+        RttCompare_vector_of_strings
+    },
+    {
+        "vector_of_struct_with_ints",
+        RttCompare_vector_of_struct_with_ints
+    },
+    {
+        "vector_of_struct_with_strings",
+        RttCompare_vector_of_struct_with_strings
+    },
+    {
+        "vector_of_arrays_of_strings",
+        RttCompare_vector_of_arrays_of_strings
+    },
+    {
+        "vector_of_opaque",
+        RttCompare_vector_of_opaque
+    }
+};
+
 
 static bake_test_suite suites[] = {
     {
@@ -5041,7 +5546,7 @@ static bake_test_suite suites[] = {
         "EnumTypes",
         NULL,
         NULL,
-        17,
+        19,
         EnumTypes_testcases
     },
     {
@@ -5055,7 +5560,7 @@ static bake_test_suite suites[] = {
         "RuntimeTypes",
         NULL,
         NULL,
-        47,
+        51,
         RuntimeTypes_testcases
     },
     {
@@ -5104,42 +5609,42 @@ static bake_test_suite suites[] = {
         "Cursor",
         NULL,
         NULL,
-        146,
+        158,
         Cursor_testcases
     },
     {
         "DeserializeFromJson",
         NULL,
         NULL,
-        138,
+        143,
         DeserializeFromJson_testcases
     },
     {
         "SerializeToJson",
         NULL,
         NULL,
-        46,
+        56,
         SerializeToJson_testcases
     },
     {
         "SerializeEntityToJson",
         NULL,
         NULL,
-        75,
+        81,
         SerializeEntityToJson_testcases
     },
     {
         "SerializeIterToJson",
         NULL,
         NULL,
-        76,
+        77,
         SerializeIterToJson_testcases
     },
     {
         "SerializeIterToRowJson",
         NULL,
         NULL,
-        60,
+        61,
         SerializeIterToRowJson_testcases
     },
     {
@@ -5167,7 +5672,7 @@ static bake_test_suite suites[] = {
         "OpaqueTypes",
         NULL,
         NULL,
-        18,
+        31,
         OpaqueTypes_testcases
     },
     {
@@ -5176,9 +5681,23 @@ static bake_test_suite suites[] = {
         NULL,
         40,
         Misc_testcases
+    },
+    {
+        "PrimitiveCompare",
+        NULL,
+        NULL,
+        19,
+        PrimitiveCompare_testcases
+    },
+    {
+        "RttCompare",
+        NULL,
+        NULL,
+        26,
+        RttCompare_testcases
     }
 };
 
 int main(int argc, char *argv[]) {
-    return bake_test_run("meta", argc, argv, suites, 21);
+    return bake_test_run("meta", argc, argv, suites, 23);
 }

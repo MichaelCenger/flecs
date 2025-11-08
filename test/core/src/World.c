@@ -1134,7 +1134,25 @@ void World_delete_empty_tables_after_mini(void) {
     ecs_world_t *world = ecs_mini();
 
     const ecs_world_info_t *info = ecs_get_world_info(world);
-    int32_t empty_table_count = info->table_count;
+    int32_t old_table_count = info->table_count;
+
+    ecs_query_t *q = ecs_query(world, {
+        .terms = {{ .id = EcsAny }},
+        .flags = EcsQueryMatchEmptyTables
+    });
+    test_assert(q != NULL);
+
+    ecs_iter_t it = ecs_query_iter(world, q);
+    int32_t empty_table_count = 0;
+    while (ecs_query_next(&it)) {
+        if (!ecs_table_count(it.table)) {
+            empty_table_count ++;
+        }
+    }
+
+    ecs_query_fini(q);
+
+    empty_table_count --; // correct for root table
 
     int32_t deleted;
     deleted = ecs_delete_empty_tables(world, 
@@ -1143,14 +1161,32 @@ void World_delete_empty_tables_after_mini(void) {
 
     deleted = ecs_delete_empty_tables(world, 
         &(ecs_delete_empty_tables_desc_t){ .delete_generation = 1}); /* Delete */
-    test_assert(deleted != 0);
-    test_int(info->table_count + deleted, empty_table_count);
+    test_assert(deleted == empty_table_count);
+    test_int(info->table_count + deleted, old_table_count);
 
     ecs_fini(world);
 }
 
 void World_delete_empty_tables_after_init(void) {
     ecs_world_t *world = ecs_init();
+
+    ecs_query_t *q = ecs_query(world, {
+        .terms = {{ .id = EcsAny }},
+        .flags = EcsQueryMatchEmptyTables
+    });
+    test_assert(q != NULL);
+
+    ecs_iter_t it = ecs_query_iter(world, q);
+    int32_t empty_table_count = 0;
+    while (ecs_query_next(&it)) {
+        if (!ecs_table_count(it.table)) {
+            empty_table_count ++;
+        }
+    }
+
+    ecs_query_fini(q);
+
+    empty_table_count --; // correct for root table
 
     int32_t deleted;
     deleted = ecs_delete_empty_tables(world, 
@@ -1159,7 +1195,627 @@ void World_delete_empty_tables_after_init(void) {
 
     deleted = ecs_delete_empty_tables(world, 
         &(ecs_delete_empty_tables_desc_t){ .delete_generation = 1 }); /* Delete */
-    test_assert(deleted != 0);
+    test_assert(deleted == empty_table_count);
+
+    ecs_fini(world);
+}
+
+static int dummy_hook_invoked = 0;
+
+static void DummyHook(ecs_iter_t *it) {
+    Position *p = ecs_field(it, Position, 0);
+    test_assert(p != NULL);
+    dummy_hook_invoked ++;
+}
+
+void World_delete_empty_tables_w_add_hook_clear(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+
+    ecs_set_hooks(world, Position, {
+        .on_add = DummyHook
+    });
+
+    test_int(0, dummy_hook_invoked);
+
+    ecs_entity_t p = ecs_new(world);
+    ecs_set(world, p, Position, {10, 20});
+    ecs_delete(world, p);
+
+    test_int(1, dummy_hook_invoked);
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .clear_generation = 1
+    });
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .clear_generation = 1
+    });
+
+    test_int(1, dummy_hook_invoked);
+
+    ecs_fini(world);
+}
+
+void World_delete_empty_tables_w_add_hook_delete(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+
+    ecs_set_hooks(world, Position, {
+        .on_add = DummyHook
+    });
+
+    test_int(0, dummy_hook_invoked);
+
+    ecs_entity_t p = ecs_new(world);
+    ecs_set(world, p, Position, {10, 20});
+    ecs_delete(world, p);
+
+    test_int(1, dummy_hook_invoked);
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .delete_generation = 1
+    });
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .delete_generation = 1
+    });
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .delete_generation = 1
+    });
+
+    test_int(1, dummy_hook_invoked);
+
+    ecs_fini(world);
+}
+
+void World_delete_empty_tables_w_add_hook_clear_delete(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+
+    ecs_set_hooks(world, Position, {
+        .on_add = DummyHook
+    });
+
+    test_int(0, dummy_hook_invoked);
+
+    ecs_entity_t p = ecs_new(world);
+    ecs_set(world, p, Position, {10, 20});
+    ecs_delete(world, p);
+
+    test_int(1, dummy_hook_invoked);
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .clear_generation = 1,
+        .delete_generation = 1
+    });
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .clear_generation = 1,
+        .delete_generation = 1
+    });
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .clear_generation = 1,
+        .delete_generation = 1
+    });
+
+    test_int(1, dummy_hook_invoked);
+
+    ecs_fini(world);
+}
+
+void World_delete_empty_tables_w_add_hook_clear_before_delete(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+
+    ecs_set_hooks(world, Position, {
+        .on_add = DummyHook
+    });
+
+    test_int(0, dummy_hook_invoked);
+
+    ecs_entity_t p = ecs_new(world);
+    ecs_set(world, p, Position, {10, 20});
+    ecs_delete(world, p);
+
+    test_int(1, dummy_hook_invoked);
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .clear_generation = 1,
+        .delete_generation = 2
+    });
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .clear_generation = 1,
+        .delete_generation = 2
+    });
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .clear_generation = 1,
+        .delete_generation = 2
+    });
+
+    test_int(1, dummy_hook_invoked);
+
+    ecs_fini(world);
+}
+
+void World_delete_empty_tables_w_remove_hook_clear(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+
+    ecs_set_hooks(world, Position, {
+        .on_remove = DummyHook
+    });
+
+    test_int(0, dummy_hook_invoked);
+
+    ecs_entity_t p = ecs_new(world);
+    ecs_set(world, p, Position, {10, 20});
+    ecs_delete(world, p);
+
+    test_int(1, dummy_hook_invoked);
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .clear_generation = 1
+    });
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .clear_generation = 1
+    });
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .clear_generation = 1
+    });
+
+    test_int(1, dummy_hook_invoked);
+
+    ecs_fini(world);
+
+    test_int(1, dummy_hook_invoked);
+}
+
+void World_delete_empty_tables_w_remove_hook_delete(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+
+    ecs_set_hooks(world, Position, {
+        .on_remove = DummyHook
+    });
+
+    test_int(0, dummy_hook_invoked);
+
+    ecs_entity_t p = ecs_new(world);
+    ecs_set(world, p, Position, {10, 20});
+    ecs_delete(world, p);
+
+    test_int(1, dummy_hook_invoked);
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .delete_generation = 1
+    });
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .delete_generation = 1
+    });
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .delete_generation = 1
+    });
+
+    test_int(1, dummy_hook_invoked);
+
+    ecs_fini(world);
+
+    test_int(1, dummy_hook_invoked);
+}
+
+void World_delete_empty_tables_w_remove_hook_clear_delete(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+
+    ecs_set_hooks(world, Position, {
+        .on_remove = DummyHook
+    });
+
+    test_int(0, dummy_hook_invoked);
+
+    ecs_entity_t p = ecs_new(world);
+    ecs_set(world, p, Position, {10, 20});
+    ecs_delete(world, p);
+
+    test_int(1, dummy_hook_invoked);
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .clear_generation = 1,
+        .delete_generation = 1
+    });
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .clear_generation = 1,
+        .delete_generation = 1
+    });
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .clear_generation = 1,
+        .delete_generation = 1
+    });
+
+    test_int(1, dummy_hook_invoked);
+
+    ecs_fini(world);
+
+    test_int(1, dummy_hook_invoked);
+}
+
+void World_delete_empty_tables_w_remove_hook_clear_before_delete(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+
+    ecs_set_hooks(world, Position, {
+        .on_remove = DummyHook
+    });
+
+    test_int(0, dummy_hook_invoked);
+
+    ecs_entity_t p = ecs_new(world);
+    ecs_set(world, p, Position, {10, 20});
+    ecs_delete(world, p);
+
+    test_int(1, dummy_hook_invoked);
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .clear_generation = 1,
+        .delete_generation = 2
+    });
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .clear_generation = 1,
+        .delete_generation = 2
+    });
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .clear_generation = 1,
+        .delete_generation = 2
+    });
+
+    test_int(1, dummy_hook_invoked);
+
+    ecs_fini(world);
+
+    test_int(1, dummy_hook_invoked);
+}
+
+void World_delete_empty_tables_w_set_hook_clear(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+
+    ecs_set_hooks(world, Position, {
+        .on_set = DummyHook
+    });
+
+    test_int(0, dummy_hook_invoked);
+
+    ecs_entity_t p = ecs_new(world);
+    ecs_set(world, p, Position, {10, 20});
+    ecs_delete(world, p);
+
+    test_int(1, dummy_hook_invoked);
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .clear_generation = 1
+    });
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .clear_generation = 1
+    });
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .clear_generation = 1
+    });
+
+    test_int(1, dummy_hook_invoked);
+
+    ecs_fini(world);
+
+    test_int(1, dummy_hook_invoked);
+}
+
+void World_delete_empty_tables_w_set_hook_delete(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+
+    ecs_set_hooks(world, Position, {
+        .on_set = DummyHook
+    });
+
+    test_int(0, dummy_hook_invoked);
+
+    ecs_entity_t p = ecs_new(world);
+    ecs_set(world, p, Position, {10, 20});
+    ecs_delete(world, p);
+
+    test_int(1, dummy_hook_invoked);
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .delete_generation = 1
+    });
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .delete_generation = 1
+    });
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .delete_generation = 1
+    });
+
+    test_int(1, dummy_hook_invoked);
+
+    ecs_fini(world);
+
+    test_int(1, dummy_hook_invoked);
+}
+
+void World_delete_empty_tables_w_set_hook_clear_delete(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+
+    ecs_set_hooks(world, Position, {
+        .on_set = DummyHook
+    });
+
+    test_int(0, dummy_hook_invoked);
+
+    ecs_entity_t p = ecs_new(world);
+    ecs_set(world, p, Position, {10, 20});
+    ecs_delete(world, p);
+
+    test_int(1, dummy_hook_invoked);
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .delete_generation = 1,
+        .clear_generation = 1
+    });
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .delete_generation = 1,
+        .clear_generation = 1
+    });
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .delete_generation = 1,
+        .clear_generation = 1
+    });
+
+    test_int(1, dummy_hook_invoked);
+
+    ecs_fini(world);
+
+    test_int(1, dummy_hook_invoked);
+}
+
+void World_delete_empty_tables_w_set_hook_clear_before_delete(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+
+    ecs_set_hooks(world, Position, {
+        .on_set = DummyHook
+    });
+
+    test_int(0, dummy_hook_invoked);
+
+    ecs_entity_t p = ecs_new(world);
+    ecs_set(world, p, Position, {10, 20});
+    ecs_delete(world, p);
+
+    test_int(1, dummy_hook_invoked);
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .delete_generation = 2,
+        .clear_generation = 1
+    });
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .delete_generation = 2,
+        .clear_generation = 1
+    });
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .delete_generation = 2,
+        .clear_generation = 1
+    });
+
+    test_int(1, dummy_hook_invoked);
+
+    ecs_fini(world);
+
+    test_int(1, dummy_hook_invoked);
+}
+
+void World_delete_empty_tables_w_add_hook_delete_empty_table(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+
+    ecs_set_hooks(world, Position, {
+        .on_set = DummyHook
+    });
+
+    test_int(0, dummy_hook_invoked);
+
+    ecs_table_t *t = ecs_table_find(world, &ecs_id(Position), 1);
+    test_assert(t != NULL);
+    test_int(ecs_table_count(t), 0);
+    test_int(ecs_table_size(t), 0);
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .clear_generation = 1
+    });
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .clear_generation = 1
+    });
+
+    test_int(0, dummy_hook_invoked);
+
+    ecs_fini(world);
+}
+
+void World_delete_empty_tables_w_remove_hook_delete_empty_table(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+
+    ecs_set_hooks(world, Position, {
+        .on_remove = DummyHook
+    });
+
+    test_int(0, dummy_hook_invoked);
+
+    ecs_table_t *t = ecs_table_find(world, &ecs_id(Position), 1);
+    test_assert(t != NULL);
+    test_int(ecs_table_count(t), 0);
+    test_int(ecs_table_size(t), 0);
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .clear_generation = 1
+    });
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .clear_generation = 1
+    });
+
+    test_int(0, dummy_hook_invoked);
+
+    ecs_fini(world);
+}
+
+void World_delete_empty_tables_w_set_hook_delete_empty_table(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+
+    ecs_set_hooks(world, Position, {
+        .on_set = DummyHook
+    });
+
+    test_int(0, dummy_hook_invoked);
+
+    ecs_table_t *t = ecs_table_find(world, &ecs_id(Position), 1);
+    test_assert(t != NULL);
+    test_int(ecs_table_count(t), 0);
+    test_int(ecs_table_size(t), 0);
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .clear_generation = 1
+    });
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .clear_generation = 1
+    });
+
+    test_int(0, dummy_hook_invoked);
+
+    ecs_fini(world);
+}
+
+void World_delete_empty_tables_w_add_hook_clear_empty_table(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+
+    ecs_set_hooks(world, Position, {
+        .on_add = DummyHook
+    });
+
+    test_int(0, dummy_hook_invoked);
+
+    ecs_table_t *t = ecs_table_find(world, &ecs_id(Position), 1);
+    test_assert(t != NULL);
+    test_int(ecs_table_count(t), 0);
+    test_int(ecs_table_size(t), 0);
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .delete_generation = 1
+    });
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .delete_generation = 1
+    });
+
+    test_int(0, dummy_hook_invoked);
+
+    ecs_fini(world);
+}
+
+void World_delete_empty_tables_w_remove_hook_clear_empty_table(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+
+    ecs_set_hooks(world, Position, {
+        .on_remove = DummyHook
+    });
+
+    test_int(0, dummy_hook_invoked);
+
+    ecs_table_t *t = ecs_table_find(world, &ecs_id(Position), 1);
+    test_assert(t != NULL);
+    test_int(ecs_table_count(t), 0);
+    test_int(ecs_table_size(t), 0);
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .delete_generation = 1
+    });
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .delete_generation = 1
+    });
+
+    test_int(0, dummy_hook_invoked);
+
+    ecs_fini(world);
+}
+
+void World_delete_empty_tables_w_set_hook_clear_empty_table(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+
+    ecs_set_hooks(world, Position, {
+        .on_set = DummyHook
+    });
+
+    test_int(0, dummy_hook_invoked);
+
+    ecs_table_t *t = ecs_table_find(world, &ecs_id(Position), 1);
+    test_assert(t != NULL);
+    test_int(ecs_table_count(t), 0);
+    test_int(ecs_table_size(t), 0);
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .delete_generation = 1
+    });
+
+    ecs_delete_empty_tables(world, &(ecs_delete_empty_tables_desc_t) {
+        .delete_generation = 1
+    });
+
+    test_int(0, dummy_hook_invoked);
 
     ecs_fini(world);
 }
@@ -1178,8 +1834,9 @@ void World_delete_1000_empty_tables(void) {
         ecs_add_id(world, e, ecs_new(world));
     }
 
-    ecs_run_aperiodic(world, 0);
     test_int(info->table_count, old_table_count + 1000 + 1);
+
+    ecs_delete(world, e);
 
     int32_t deleted;
     deleted = ecs_delete_empty_tables(world, 
@@ -1774,4 +2431,782 @@ void World_world_init_fini_log_all(void) {
     ecs_fini(world);
 
     test_assert(true);
+}
+
+void World_mini_shrink_fini(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ecs_shrink(world);
+
+    ecs_fini(world);
+
+    test_assert(true);
+}
+
+void World_init_shrink_fini(void) {
+    ecs_world_t *world = ecs_init();
+
+    ecs_shrink(world);
+
+    ecs_fini(world);
+
+    test_assert(true);
+}
+
+void World_init_shrink_twice_fini(void) {
+    ecs_world_t *world = ecs_init();
+
+    ecs_shrink(world);
+    ecs_shrink(world);
+
+    ecs_fini(world);
+
+    test_assert(true);
+}
+
+void World_init_create_delete_entities_shrink_fini(void) {
+    ecs_world_t *world = ecs_init();
+
+    ECS_COMPONENT(world, Position);
+    ECS_COMPONENT(world, Velocity);
+
+    int Tags = 100, Rows = 200;
+
+    ecs_entity_t *tags = ecs_os_malloc_n(ecs_entity_t, Tags);
+    for (int t = 0; t < Tags; t ++) {
+        tags[t] = ecs_new(world);
+    }
+
+    ecs_entity_t *entities = ecs_os_malloc_n(ecs_entity_t, Rows * Tags);
+    int32_t index = 0;
+    for (int t = 0; t < Tags; t ++) {
+        ecs_entity_t tag = tags[t];
+        for (int e = 0; e < Rows; e ++) {
+            entities[index] = ecs_new(world);
+            ecs_add(world, entities[index], Position);
+            ecs_add(world, entities[index], Velocity);
+            ecs_add_id(world, entities[index], tag);
+            index ++;
+        }
+    }
+
+    ecs_shrink(world);
+
+    index = 0;
+
+    for (int t = 0; t < Tags; t ++) {
+        ecs_entity_t tag = tags[t];
+        for (int e = 0; e < Rows; e ++) {
+            test_assert(ecs_is_alive(world, entities[index]));
+            test_assert(ecs_has(world, entities[index], Position));
+            test_assert(ecs_has(world, entities[index], Velocity));
+            test_assert(ecs_has_id(world, entities[index], tag));
+            index ++;
+        }
+    }
+
+    for (int e = 0; e < Tags * Rows; e ++) {
+        ecs_delete(world, entities[e]);
+    }
+
+    ecs_shrink(world);
+
+    for (int e = 0; e < Tags * Rows; e ++) {
+        test_assert(!ecs_is_alive(world, entities[e]));
+    }
+
+    ecs_os_free(tags);
+    ecs_os_free(entities);
+
+    ecs_fini(world);
+}
+
+void World_init_create_delete_random_1_entities_shrink_fini(void) {
+    ecs_world_t *world = ecs_init();
+
+    ECS_COMPONENT(world, Position);
+    ECS_COMPONENT(world, Velocity);
+
+    int Tags = 100, Rows = 200, DONT_DELETE = 4;
+
+    ecs_entity_t *tags = ecs_os_malloc_n(ecs_entity_t, Tags);
+    for (int t = 0; t < Tags; t ++) {
+        tags[t] = ecs_new(world);
+    }
+
+    ecs_entity_t *entities = ecs_os_malloc_n(ecs_entity_t, Rows * Tags);
+    int32_t index = 0;
+    for (int t = 0; t < Tags; t ++) {
+        ecs_entity_t tag = tags[t];
+        for (int e = 0; e < Rows; e ++) {
+            entities[index] = ecs_new(world);
+            ecs_add(world, entities[index], Position);
+            ecs_add(world, entities[index], Velocity);
+            ecs_add_id(world, entities[index], tag);
+            index ++;
+        }
+    }
+
+    ecs_shrink(world);
+
+    index = 0;
+
+    for (int t = 0; t < Tags; t ++) {
+        ecs_entity_t tag = tags[t];
+        for (int e = 0; e < Rows; e ++) {
+            test_assert(ecs_is_alive(world, entities[index]));
+            test_assert(ecs_has(world, entities[index], Position));
+            test_assert(ecs_has(world, entities[index], Velocity));
+            test_assert(ecs_has_id(world, entities[index], tag));
+            index ++;
+        }
+    }
+
+    ecs_entity_t *dont_delete = ecs_os_malloc_n(ecs_entity_t, DONT_DELETE);
+    for (int e = 0; e < DONT_DELETE; e ++) {
+        int32_t index;
+        do {
+            index = rand() % (Rows * Tags);
+        } while(!entities[index]);
+
+        dont_delete[e] = entities[index];
+        entities[index] = 0;
+    }
+
+    for (int e = 0; e < Tags * Rows; e ++) {
+        if (entities[e]) {
+            ecs_delete(world, entities[e]);
+        }
+    }
+
+    ecs_shrink(world);
+
+    for (int e = 0; e < Tags * Rows; e ++) {
+        if (entities[e]) {
+            test_assert(!ecs_is_alive(world, entities[e]));
+        }
+    }
+
+    for (int e = 0; e < DONT_DELETE; e ++) {
+        test_assert(ecs_is_alive(world, dont_delete[e]));
+    }
+
+    ecs_os_free(tags);
+    ecs_os_free(entities);
+    ecs_os_free(dont_delete);
+
+    ecs_fini(world);
+}
+
+void World_init_create_delete_random_2_entities_shrink_fini(void) {
+    ecs_world_t *world = ecs_init();
+
+    ECS_COMPONENT(world, Position);
+    ECS_COMPONENT(world, Velocity);
+
+    int Tags = 100, Rows = 200, Delete = 4;
+
+    ecs_entity_t *tags = ecs_os_malloc_n(ecs_entity_t, Tags);
+    for (int t = 0; t < Tags; t ++) {
+        tags[t] = ecs_new(world);
+    }
+
+    ecs_entity_t *entities = ecs_os_malloc_n(ecs_entity_t, Rows * Tags);
+    int32_t index = 0;
+    for (int t = 0; t < Tags; t ++) {
+        ecs_entity_t tag = tags[t];
+        for (int e = 0; e < Rows; e ++) {
+            entities[index] = ecs_new(world);
+            ecs_add(world, entities[index], Position);
+            ecs_add(world, entities[index], Velocity);
+            ecs_add_id(world, entities[index], tag);
+            index ++;
+        }
+    }
+
+    ecs_shrink(world);
+
+    index = 0;
+
+    for (int t = 0; t < Tags; t ++) {
+        ecs_entity_t tag = tags[t];
+        for (int e = 0; e < Rows; e ++) {
+            test_assert(ecs_is_alive(world, entities[index]));
+            test_assert(ecs_has(world, entities[index], Position));
+            test_assert(ecs_has(world, entities[index], Velocity));
+            test_assert(ecs_has_id(world, entities[index], tag));
+            index ++;
+        }
+    }
+
+    ecs_entity_t *delete = ecs_os_malloc_n(ecs_entity_t, Delete);
+    for (int e = 0; e < Delete; e ++) {
+        int32_t index;
+        do {
+            index = rand() % (Rows * Tags);
+        } while(!entities[index]);
+
+        delete[e] = entities[index];
+        entities[index] = 0;
+        ecs_delete(world, delete[e]);
+    }
+
+    ecs_shrink(world);
+
+    for (int e = 0; e < Tags * Rows; e ++) {
+        if (entities[e]) {
+            test_assert(ecs_is_alive(world, entities[e]));
+        }
+    }
+
+    for (int e = 0; e < Delete; e ++) {
+        test_assert(!ecs_is_alive(world, delete[e]));
+    }
+
+    ecs_os_free(tags);
+    ecs_os_free(entities);
+    ecs_os_free(delete);
+
+    ecs_fini(world);
+}
+
+void World_recreate_tables_after_shrink(void) {
+    ecs_world_t *world = ecs_mini();
+
+    int32_t COUNT = 1000;
+
+    ecs_entity_t *tags = ecs_os_malloc_n(ecs_entity_t, COUNT);
+    for (int32_t i = 0; i < COUNT; i ++) {
+        tags[i] = ecs_new(world);
+    }
+
+    ecs_entity_t e = ecs_new(world);
+    for (int32_t i = 0; i < COUNT; i ++) {
+        ecs_add_id(world, e, tags[i]);
+        if (i) {
+            ecs_remove_id(world, e, tags[i - 1]);
+        }
+    }
+
+    ecs_delete(world, e);
+
+    ecs_shrink(world);
+
+    e = ecs_new(world);
+    for (int32_t i = 0; i < COUNT; i ++) {
+        ecs_add_id(world, e, tags[i]);
+        if (i) {
+            ecs_remove_id(world, e, tags[i - 1]);
+        }
+    }
+
+    test_assert(ecs_is_alive(world, e));
+    test_assert(ecs_get_type(world, e)->count == 1);
+    test_assert(ecs_has_id(world, e, tags[COUNT - 1]));
+
+    ecs_os_free(tags);
+
+    ecs_fini(world);
+}
+
+void World_mini_all_tables_builtin(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ecs_query_t *q = ecs_query(world, {
+        .terms = {{ EcsAny }}
+    });
+
+    test_assert(q != NULL);
+
+    ecs_iter_t it = ecs_query_iter(world, q);
+    while (ecs_query_next(&it)) {
+        if (it.count == 1) {
+            if (it.entities[0] == EcsFlecs) {
+                // Skip table with root flecs module entity. It's technically a
+                // table with builtin entities, but it can also contain entities
+                // that are not builtin.
+                // Deleting ::flecs is protected by (OnDelete, Panic).
+                continue;
+            }
+
+            if (it.entities[0] == EcsFlecsCore) {
+                // flecs.core lives in a (ChildOf, flecs) table which in theory
+                // could contain other modules that are not part of the core.
+                // Deleting ::flecs.core is also protected by (OnDelete. Panic).
+                continue;
+            }
+        }
+
+        test_assert(ecs_table_has_flags(it.table, EcsTableHasBuiltins));
+    }
+
+    ecs_query_fini(q);
+
+    ecs_fini(world);
+}
+
+void World_mini_all_tables_builtin_after_add(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ecs_entity_t tag = ecs_new(world);
+
+    ecs_add_id(world, ecs_id(EcsComponent), tag);
+
+    ecs_query_t *q = ecs_query(world, {
+        .terms = {{ EcsAny }}
+    });
+
+    test_assert(q != NULL);
+
+    ecs_iter_t it = ecs_query_iter(world, q);
+    while (ecs_query_next(&it)) {
+        if (!ecs_table_get_type(it.table)->count) {
+            // Skip root table which contains "tag"
+            continue;
+        }
+
+        if (it.entities[0] == EcsFlecs) {
+            // Skip table with root flecs module entity. It's technically a
+            // table with builtin entities, but it can also contain entities
+            // that are not builtin.
+            // Deleting ::flecs is protected by (OnDelete, Panic).
+            continue;
+        }
+
+        if (it.entities[0] == EcsFlecsCore) {
+            // flecs.core lives in a (ChildOf, flecs) table which in theory
+            // could contain other modules that are not part of the core.
+            // Deleting ::flecs.core is also protected by (OnDelete. Panic).
+            continue;
+        }
+
+        test_assert(ecs_table_has_flags(it.table, EcsTableHasBuiltins));
+    }
+
+    ecs_query_fini(q);
+
+    ecs_fini(world);
+}
+
+void World_user_component_not_builtin(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+
+    ecs_table_t *table = ecs_get_table(world, ecs_id(Position));
+
+    test_assert(!ecs_table_has_flags(table, EcsTableHasBuiltins));
+
+    ecs_fini(world);
+}
+
+void World_remove_from_builtin(void) {
+    install_test_abort();
+
+    ecs_world_t *world = ecs_mini();
+
+    ecs_entity_t tag = ecs_new(world);
+
+    ecs_add_id(world, ecs_id(EcsComponent), tag);
+    
+    test_expect_abort();
+
+    ecs_remove_id(world, ecs_id(EcsComponent), tag);
+}
+
+void World_remove_builtin_from_builtin(void) {
+    install_test_abort();
+    
+    ecs_world_t *world = ecs_mini();
+    
+    test_expect_abort();
+
+    ecs_remove_id(world, ecs_id(EcsComponent), EcsFinal);
+}
+
+void World_reparent_builtin(void) {
+    install_test_abort();
+
+    ecs_world_t *world = ecs_mini();
+    
+    test_expect_abort();
+
+    ecs_add_pair(world, ecs_id(EcsComponent), EcsChildOf, EcsFlecs);
+}
+
+void World_clear_builtin(void) {
+    install_test_abort();
+
+    ecs_world_t *world = ecs_mini();
+    
+    test_expect_abort();
+
+    ecs_clear(world, ecs_id(EcsComponent));
+}
+
+void World_delete_builtin(void) {
+    install_test_abort();
+
+    ecs_world_t *world = ecs_mini();
+    
+    test_expect_abort();
+
+    ecs_delete(world, ecs_id(EcsComponent));
+}
+
+void World_rename_builtin(void) {
+    install_test_abort();
+
+    ecs_world_t *world = ecs_mini();
+    
+    test_expect_abort();
+
+    ecs_set_name(world, ecs_id(EcsComponent), "fuu");
+}
+
+void World_remove_name_builtin(void) {
+    install_test_abort();
+
+    ecs_world_t *world = ecs_mini();
+    
+    test_expect_abort();
+
+    ecs_remove_pair(
+        world, ecs_id(EcsComponent), ecs_id(EcsIdentifier), EcsName);
+}
+
+void World_delete_flecs(void) {
+    install_test_abort();
+
+    ecs_world_t *world = ecs_mini();
+    
+    test_expect_abort();
+
+    ecs_delete(world, EcsFlecs);
+}
+
+void World_reparent_flecs(void) {
+    install_test_abort();
+
+    ecs_world_t *world = ecs_mini();
+
+    ecs_entity_t tgt = ecs_new(world);
+    
+    test_expect_abort();
+
+    ecs_add_pair(world, EcsFlecs, EcsChildOf, tgt);
+}
+
+void World_rename_flecs(void) {
+    install_test_abort();
+
+    ecs_world_t *world = ecs_mini();
+    
+    test_expect_abort();
+
+    ecs_set_name(world, EcsFlecs, "fuu");
+}
+
+void World_remove_name_from_flecs(void) {
+    install_test_abort();
+
+    ecs_world_t *world = ecs_mini();
+    
+    test_expect_abort();
+
+    ecs_remove_pair(world, EcsFlecs, ecs_id(EcsIdentifier), EcsName);
+}
+
+void World_delete_flecs_core(void) {
+    install_test_abort();
+
+    ecs_world_t *world = ecs_mini();
+    
+    test_expect_abort();
+
+    ecs_delete(world, EcsFlecsCore);
+}
+
+void World_reparent_flecs_core(void) {
+    install_test_abort();
+
+    ecs_world_t *world = ecs_mini();
+
+    ecs_entity_t tgt = ecs_new(world);
+    
+    test_expect_abort();
+
+    ecs_add_pair(world, EcsFlecsCore, EcsChildOf, tgt);
+}
+
+void World_rename_flecs_core(void) {
+    install_test_abort();
+
+    ecs_world_t *world = ecs_mini();
+    
+    test_expect_abort();
+
+    ecs_set_name(world, EcsFlecsCore, "fuu");
+}
+
+void World_user_entity_w_flecs_parent(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+
+    ecs_entity_t e = ecs_new_w_pair(world, EcsChildOf, EcsFlecs);
+
+    // Check we can remove components, delete entity
+    ecs_add(world, e, Position);
+    ecs_remove(world, e, Position);
+
+    ecs_delete(world, e);
+
+    test_assert(true); // no asserts
+
+    ecs_fini(world);
+}
+
+void World_add_exclusive_after_query(void) {
+    install_test_abort();
+
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+
+    ecs_query_t *q = ecs_query(world, {
+        .terms = {{ ecs_id(Position) }}
+    });
+
+    test_assert(q != NULL);
+
+    test_expect_abort();
+
+    ecs_add_id(world, ecs_id(Position), EcsExclusive);
+}
+
+void World_add_with_after_query(void) {
+    install_test_abort();
+
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+    ECS_TAG(world, Foo);
+
+    ecs_query_t *q = ecs_query(world, {
+        .terms = {{ ecs_id(Position) }}
+    });
+
+    test_assert(q != NULL);
+
+    test_expect_abort();
+
+    ecs_add_pair(world, ecs_id(Position), EcsWith, Foo);
+}
+
+void World_add_final_after_query(void) {
+    install_test_abort();
+
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+
+    ecs_query_t *q = ecs_query(world, {
+        .terms = {{ ecs_id(Position) }}
+    });
+
+    test_assert(q != NULL);
+
+    test_expect_abort();
+
+    ecs_add_id(world, ecs_id(Position), EcsFinal);
+}
+
+void World_add_isa_after_query(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+    ECS_TAG(world, Foo);
+
+    ecs_query_t *q = ecs_query(world, {
+        .terms = {{ ecs_id(Position) }}
+    });
+
+    test_assert(q != NULL);
+
+    ecs_add_pair(world, ecs_id(Position), EcsIsA, Foo);
+
+    ecs_query_fini(q);
+
+    ecs_fini(world);
+}
+
+void World_add_isa_after_query_tgt(void) {
+    install_test_abort();
+
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+    ECS_COMPONENT(world, Velocity);
+
+    ecs_query_t *q = ecs_query(world, {
+        .terms = {{ ecs_id(Velocity) }}
+    });
+
+    test_assert(q != NULL);
+
+    test_expect_abort();
+
+    ecs_add_pair(world, ecs_id(Position), EcsIsA, ecs_id(Velocity));
+}
+
+void World_add_inheritable_after_query(void) {
+    install_test_abort();
+
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+
+    ecs_query_t *q = ecs_query(world, {
+        .terms = {{ ecs_id(Position) }}
+    });
+
+    test_assert(q != NULL);
+
+    test_expect_abort();
+
+    ecs_add_id(world, ecs_id(Position), EcsInheritable);
+}
+
+void World_add_isa_after_query_after_inheritable(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+    ECS_TAG(world, Foo);
+
+    ecs_add_id(world, ecs_id(Position), EcsInheritable);
+
+    ecs_query_t *q = ecs_query(world, {
+        .terms = {{ ecs_id(Position) }}
+    });
+
+    test_assert(q != NULL);
+
+    ecs_add_pair(world, Foo, EcsIsA, ecs_id(Position));
+
+    ecs_query_fini(q);
+
+    ecs_fini(world);
+}
+
+void World_add_isa_after_query_after_isa(void) {
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+    ECS_TAG(world, Foo);
+    ECS_TAG(world, Bar);
+
+    ecs_add_pair(world, ecs_id(Position), EcsIsA, Foo);
+
+    ecs_query_t *q = ecs_query(world, {
+        .terms = {{ ecs_id(Position) }}
+    });
+
+    test_assert(q != NULL);
+
+    ecs_add_pair(world, ecs_id(Position), EcsIsA, Bar);
+
+    ecs_query_fini(q);
+
+    ecs_fini(world);
+}
+
+void World_add_on_instantiate_inherit_after_query(void) {
+    install_test_abort();
+
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+
+    ecs_query_t *q = ecs_query(world, {
+        .terms = {{ ecs_id(Position) }}
+    });
+
+    test_assert(q != NULL);
+
+    test_expect_abort();
+
+    ecs_add_pair(world, ecs_id(Position), EcsOnInstantiate, EcsInherit);
+}
+
+void World_add_sparse_after_query(void) {
+    install_test_abort();
+
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+
+    ecs_query_t *q = ecs_query(world, {
+        .terms = {{ ecs_id(Position) }}
+    });
+
+    test_assert(q != NULL);
+
+    test_expect_abort();
+
+    ecs_add_id(world, ecs_id(Position), EcsSparse);
+}
+
+void World_add_dont_fragment_after_query(void) {
+    install_test_abort();
+
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+
+    ecs_query_t *q = ecs_query(world, {
+        .terms = {{ ecs_id(Position) }}
+    });
+
+    test_assert(q != NULL);
+
+    test_expect_abort();
+
+    ecs_add_id(world, ecs_id(Position), EcsDontFragment);
+}
+
+void World_add_can_toggle_after_query(void) {
+    install_test_abort();
+
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+
+    ecs_query_t *q = ecs_query(world, {
+        .terms = {{ ecs_id(Position) }}
+    });
+
+    test_assert(q != NULL);
+
+    test_expect_abort();
+
+    ecs_add_id(world, ecs_id(Position), EcsCanToggle);
+}
+
+void World_add_traversable_after_query(void) {
+    install_test_abort();
+
+    ecs_world_t *world = ecs_mini();
+
+    ECS_COMPONENT(world, Position);
+
+    ecs_query_t *q = ecs_query(world, {
+        .terms = {{ ecs_id(Position) }}
+    });
+
+    test_assert(q != NULL);
+
+    test_expect_abort();
+
+    ecs_add_id(world, ecs_id(Position), EcsTraversable);
 }

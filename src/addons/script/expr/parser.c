@@ -217,6 +217,10 @@ const char* flecs_script_parse_initializer(
                     }
                     EndOfRule;
                 }
+
+                case '\0':
+                    pos = lookahead;
+                    EndOfRule;
             )
         }
     } while (true);
@@ -429,15 +433,30 @@ const char* flecs_script_parse_lhs(
             const char *expr = Token(0);
             if (strchr(expr, '.') || strchr(expr, 'e')) {
                 *out = (ecs_expr_node_t*)flecs_expr_float(parser, atof(expr));
-            } else if (expr[0] == '-') {
+                break;
+            }
+            int base = 10;
+            if (expr[0] == '0' && (expr[1] == 'x' || expr[1] == 'X')) {
+                base = 16;
+                expr += 2;
+            } else if (expr[0] == '0' && (expr[1] == 'b' || expr[1] == 'B')) {
+                base = 2;
+                expr += 2;
+            }
+            if (expr[0] == '-') {
                 char *end;
                 *out = (ecs_expr_node_t*)flecs_expr_int(parser, 
-                    strtoll(expr, &end, 10));
+                    strtoll(expr, &end, base));
             } else {
                 char *end;
                 *out = (ecs_expr_node_t*)flecs_expr_uint(parser, 
-                    strtoull(expr, &end, 10));
+                    strtoull(expr, &end, base));
             }
+            break;
+        }
+
+        case EcsTokChar: {
+            *out = (ecs_expr_node_t*)flecs_expr_char(parser, Token(0));
             break;
         }
 
@@ -528,6 +547,44 @@ const char* flecs_script_parse_lhs(
 
                 break;
             })
+
+            can_have_rhs = false;
+
+            break;
+        }
+
+        case EcsTokKeywordNew: {
+            ecs_expr_new_t *node = flecs_expr_new(parser);
+            *out = (ecs_expr_node_t*)node;
+
+            int32_t stmt_count = ecs_vec_count(&parser->scope->stmts);
+
+            pos = flecs_script_stmt(parser, pos);
+            if (!pos) {
+                goto error;
+            }
+
+            pos = flecs_parse_ws_eol(pos);
+
+            if ((stmt_count - ecs_vec_count(&parser->scope->stmts)) > 1) {
+                Error("expected entity statement after new");
+            }
+
+            ecs_script_node_t **script_node_ptr = ecs_vec_last_t(
+                &parser->scope->stmts, ecs_script_node_t*);
+            if (script_node_ptr == NULL) {
+                Error("expected entity statement after new");
+            }
+
+            ecs_script_node_t *script_node = *script_node_ptr;
+            ecs_assert(script_node != NULL, ECS_INTERNAL_ERROR, NULL);
+            ecs_vec_remove_last(&parser->scope->stmts);
+
+            if (script_node->kind != EcsAstEntity) {
+                Error("expected entity statement after new");
+            }
+
+            node->entity = (ecs_script_entity_t*)script_node;
 
             can_have_rhs = false;
 

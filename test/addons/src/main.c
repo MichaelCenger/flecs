@@ -109,6 +109,7 @@ void Pipeline_disable_component_from_immediate_system(void);
 void Pipeline_run_w_empty_query(void);
 void Pipeline_run_w_0_src_query(void);
 void Pipeline_inout_none_after_write(void);
+void Pipeline_empty_pipeline_after_disable_phase(void);
 
 // Testsuite 'SystemMisc'
 void SystemMisc_invalid_not_without_id(void);
@@ -180,6 +181,7 @@ void SystemMisc_register_callback_after_run(void);
 void SystemMisc_register_run_after_callback(void);
 void SystemMisc_register_callback_after_run_ctx(void);
 void SystemMisc_register_run_after_callback_ctx(void);
+void SystemMisc_run_w_query_next(void);
 
 // Testsuite 'SystemPeriodic'
 void SystemPeriodic_1_type_1_component(void);
@@ -326,6 +328,18 @@ void Stats_get_not_alive_entity_count(void);
 void Stats_progress_stats_systems(void);
 void Stats_progress_stats_systems_w_empty_table_flag(void);
 
+// Testsuite 'Memory'
+void Memory_query_memory_no_cache(void);
+void Memory_query_memory_trivial_cache(void);
+void Memory_query_memory_non_trivial_cache(void);
+void Memory_query_memory_with_groups(void);
+void Memory_query_memory_with_variables(void);
+void Memory_query_memory_with_monitors(void);
+void Memory_commands_memory(void);
+void Memory_table_memory_histogram(void);
+void Memory_sparse_component_memory(void);
+void Memory_sparse_tag_memory(void);
+
 // Testsuite 'Run'
 void Run_setup(void);
 void Run_run(void);
@@ -395,10 +409,7 @@ void MultiThreadStaging_4_threads_add_to_current(void);
 void MultiThreadStaging_5_threads_add_to_current(void);
 void MultiThreadStaging_6_threads_add_to_current(void);
 void MultiThreadStaging_2_threads_on_add(void);
-void MultiThreadStaging_new_w_count(void);
 void MultiThreadStaging_custom_thread_auto_merge(void);
-void MultiThreadStaging_set_pair_w_new_target_readonly(void);
-void MultiThreadStaging_set_pair_w_new_target_tgt_component_readonly(void);
 void MultiThreadStaging_set_pair_w_new_target_defer(void);
 void MultiThreadStaging_set_pair_w_new_target_tgt_component_defer(void);
 
@@ -428,6 +439,7 @@ void Modules_import_monitor_2_worlds(void);
 void Modules_import_monitor_after_mini(void);
 void Modules_import_2_worlds(void);
 void Modules_component_parent_becomes_module(void);
+void Modules_module_has_singleton(void);
 
 // Testsuite 'App'
 void App_app_w_frame_action(void);
@@ -452,6 +464,7 @@ void Rest_try_query(void);
 void Rest_query(void);
 void Rest_named_query(void);
 void Rest_tables(void);
+void Rest_components(void);
 void Rest_request_commands(void);
 void Rest_request_commands_2_syncs(void);
 void Rest_request_commands_no_frames(void);
@@ -464,6 +477,7 @@ void Rest_import_rest_after_mini(void);
 void Rest_get_pipeline_stats_after_delete_system(void);
 void Rest_request_world_summary_before_monitor_sys_run(void);
 void Rest_escape_backslash(void);
+void Rest_request_small_buffer_plus_one(void);
 
 // Testsuite 'Metrics'
 void Metrics_member_gauge_1_entity(void);
@@ -937,6 +951,10 @@ bake_test_case Pipeline_testcases[] = {
     {
         "inout_none_after_write",
         Pipeline_inout_none_after_write
+    },
+    {
+        "empty_pipeline_after_disable_phase",
+        Pipeline_empty_pipeline_after_disable_phase
     }
 };
 
@@ -1216,6 +1234,10 @@ bake_test_case SystemMisc_testcases[] = {
     {
         "register_run_after_callback_ctx",
         SystemMisc_register_run_after_callback_ctx
+    },
+    {
+        "run_w_query_next",
+        SystemMisc_run_w_query_next
     }
 };
 
@@ -1741,6 +1763,49 @@ bake_test_case Stats_testcases[] = {
     }
 };
 
+bake_test_case Memory_testcases[] = {
+    {
+        "query_memory_no_cache",
+        Memory_query_memory_no_cache
+    },
+    {
+        "query_memory_trivial_cache",
+        Memory_query_memory_trivial_cache
+    },
+    {
+        "query_memory_non_trivial_cache",
+        Memory_query_memory_non_trivial_cache
+    },
+    {
+        "query_memory_with_groups",
+        Memory_query_memory_with_groups
+    },
+    {
+        "query_memory_with_variables",
+        Memory_query_memory_with_variables
+    },
+    {
+        "query_memory_with_monitors",
+        Memory_query_memory_with_monitors
+    },
+    {
+        "commands_memory",
+        Memory_commands_memory
+    },
+    {
+        "table_memory_histogram",
+        Memory_table_memory_histogram
+    },
+    {
+        "sparse_component_memory",
+        Memory_sparse_component_memory
+    },
+    {
+        "sparse_tag_memory",
+        Memory_sparse_tag_memory
+    }
+};
+
 bake_test_case Run_testcases[] = {
     {
         "run",
@@ -1993,20 +2058,8 @@ bake_test_case MultiThreadStaging_testcases[] = {
         MultiThreadStaging_2_threads_on_add
     },
     {
-        "new_w_count",
-        MultiThreadStaging_new_w_count
-    },
-    {
         "custom_thread_auto_merge",
         MultiThreadStaging_custom_thread_auto_merge
-    },
-    {
-        "set_pair_w_new_target_readonly",
-        MultiThreadStaging_set_pair_w_new_target_readonly
-    },
-    {
-        "set_pair_w_new_target_tgt_component_readonly",
-        MultiThreadStaging_set_pair_w_new_target_tgt_component_readonly
     },
     {
         "set_pair_w_new_target_defer",
@@ -2114,6 +2167,10 @@ bake_test_case Modules_testcases[] = {
     {
         "component_parent_becomes_module",
         Modules_component_parent_becomes_module
+    },
+    {
+        "module_has_singleton",
+        Modules_module_has_singleton
     }
 };
 
@@ -2197,6 +2254,10 @@ bake_test_case Rest_testcases[] = {
         Rest_tables
     },
     {
+        "components",
+        Rest_components
+    },
+    {
         "request_commands",
         Rest_request_commands
     },
@@ -2243,6 +2304,10 @@ bake_test_case Rest_testcases[] = {
     {
         "escape_backslash",
         Rest_escape_backslash
+    },
+    {
+        "request_small_buffer_plus_one",
+        Rest_request_small_buffer_plus_one
     }
 };
 
@@ -2565,14 +2630,14 @@ static bake_test_suite suites[] = {
         "Pipeline",
         NULL,
         NULL,
-        86,
+        87,
         Pipeline_testcases
     },
     {
         "SystemMisc",
         NULL,
         NULL,
-        69,
+        70,
         SystemMisc_testcases
     },
     {
@@ -2646,6 +2711,13 @@ static bake_test_suite suites[] = {
         Stats_testcases
     },
     {
+        "Memory",
+        NULL,
+        NULL,
+        10,
+        Memory_testcases
+    },
+    {
         "Run",
         Run_setup,
         NULL,
@@ -2665,7 +2737,7 @@ static bake_test_suite suites[] = {
         "MultiThreadStaging",
         MultiThreadStaging_setup,
         NULL,
-        12,
+        9,
         MultiThreadStaging_testcases,
         1,
         MultiThreadStaging_params
@@ -2674,7 +2746,7 @@ static bake_test_suite suites[] = {
         "Modules",
         Modules_setup,
         NULL,
-        24,
+        25,
         Modules_testcases
     },
     {
@@ -2695,7 +2767,7 @@ static bake_test_suite suites[] = {
         "Rest",
         NULL,
         NULL,
-        20,
+        22,
         Rest_testcases
     },
     {
@@ -2715,5 +2787,5 @@ static bake_test_suite suites[] = {
 };
 
 int main(int argc, char *argv[]) {
-    return bake_test_run("addons", argc, argv, suites, 22);
+    return bake_test_run("addons", argc, argv, suites, 23);
 }

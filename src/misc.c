@@ -2,10 +2,11 @@
  * @file misc.c
  * @brief Miscellaneous functions.
  */
+ 
+#include <time.h>
+#include <errno.h>
 
 #include "private_api.h"
-#include <time.h>
-#include <ctype.h>
 
 #ifndef FLECS_NDEBUG
 static int64_t flecs_s_min[] = { 
@@ -131,14 +132,6 @@ int flecs_id_qsort_cmp(const void *a, const void *b) {
     ecs_id_t id_a = *(const ecs_id_t*)a;
     ecs_id_t id_b = *(const ecs_id_t*)b;
     return (id_a > id_b) - (id_a < id_b);
-}
-
-uint64_t flecs_string_hash(
-    const void *ptr)
-{
-    const ecs_hashed_string_t *str = ptr;
-    ecs_assert(str->hash != 0, ECS_INTERNAL_ERROR, NULL);
-    return str->hash;
 }
 
 char* flecs_vasprintf(
@@ -467,4 +460,60 @@ const char* flecs_parse_ws_eol(
     }
 
     return ptr;
+}
+
+#define FLECS_ERRSTR_MAX (64)
+static char flecs_errstr_buf[FLECS_ERRSTR_MAX];
+static char flecs_errstr_buf_1[FLECS_ERRSTR_MAX];
+static char flecs_errstr_buf_2[FLECS_ERRSTR_MAX];
+static char flecs_errstr_buf_3[FLECS_ERRSTR_MAX];
+static char flecs_errstr_buf_4[FLECS_ERRSTR_MAX];
+static char flecs_errstr_buf_5[FLECS_ERRSTR_MAX];
+
+const char* flecs_errstr(
+    char *str)
+{
+    ecs_os_strncpy(flecs_errstr_buf, str, FLECS_ERRSTR_MAX - 1);
+    ecs_os_free(str);
+    return flecs_errstr_buf;
+}
+
+const char* flecs_errstr_1(
+    char *str)
+{
+    ecs_os_strncpy(flecs_errstr_buf_1, str, FLECS_ERRSTR_MAX - 1);
+    ecs_os_free(str);
+    return flecs_errstr_buf_1;
+}
+
+const char* flecs_errstr_2(
+    char *str)
+{
+    ecs_os_strncpy(flecs_errstr_buf_2, str, FLECS_ERRSTR_MAX - 1);
+    ecs_os_free(str);
+    return flecs_errstr_buf_2;
+}
+
+const char* flecs_errstr_3(
+    char *str)
+{
+    ecs_os_strncpy(flecs_errstr_buf_3, str, FLECS_ERRSTR_MAX - 1);
+    ecs_os_free(str);
+    return flecs_errstr_buf_3;
+}
+
+const char* flecs_errstr_4(
+    char *str)
+{
+    ecs_os_strncpy(flecs_errstr_buf_4, str, FLECS_ERRSTR_MAX - 1);
+    ecs_os_free(str);
+    return flecs_errstr_buf_4;
+}
+
+const char* flecs_errstr_5(
+    char *str)
+{
+    ecs_os_strncpy(flecs_errstr_buf_5, str, FLECS_ERRSTR_MAX - 1);
+    ecs_os_free(str);
+    return flecs_errstr_buf_5;
 }

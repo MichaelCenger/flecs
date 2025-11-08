@@ -184,7 +184,7 @@ int flecs_expr_interpolated_string_visit_fold(
         (ecs_expr_interpolated_string_t*)*node_ptr;
 
     bool can_fold = true;
-    
+
     int32_t i, e = 0, count = ecs_vec_count(&node->fragments);
     char **fragments = ecs_vec_first(&node->fragments);
     for (i = 0; i < count; i ++) {
@@ -610,6 +610,8 @@ int flecs_expr_visit_fold(
         if (flecs_expr_match_visit_fold(script, node_ptr, desc)) {
             goto error;
         }
+        break;
+    case EcsExprNew:
         break;
     case EcsExprCast:
     case EcsExprCastNumber:

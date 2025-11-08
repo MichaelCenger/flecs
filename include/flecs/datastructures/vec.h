@@ -90,6 +90,15 @@ void ecs_vec_remove(
     ecs_vec_remove(vec, ECS_SIZEOF(T), elem)
 
 FLECS_API
+void ecs_vec_remove_ordered(
+    ecs_vec_t *v,
+    ecs_size_t size,
+    int32_t index);
+
+#define ecs_vec_remove_ordered_t(vec, T, elem) \
+    ecs_vec_remove_ordered(vec, ECS_SIZEOF(T), elem)
+
+FLECS_API
 void ecs_vec_remove_last(
     ecs_vec_t *vec);
 
@@ -141,6 +150,14 @@ void ecs_vec_set_min_size(
     ecs_vec_set_min_size(allocator, vec, ECS_SIZEOF(T), elem_count)
 
 FLECS_API
+void ecs_vec_set_min_size_w_type_info(
+    struct ecs_allocator_t *allocator,
+    ecs_vec_t *vec,
+    ecs_size_t size,
+    int32_t elem_count,
+    const ecs_type_info_t *ti);
+
+FLECS_API
 void ecs_vec_set_min_count(
     struct ecs_allocator_t *allocator,
     ecs_vec_t *vec,
@@ -169,6 +186,22 @@ void ecs_vec_set_count(
 
 #define ecs_vec_set_count_t(allocator, vec, T, elem_count) \
     ecs_vec_set_count(allocator, vec, ECS_SIZEOF(T), elem_count)
+
+FLECS_API
+void ecs_vec_set_count_w_type_info(
+    struct ecs_allocator_t *allocator,
+    ecs_vec_t *vec,
+    ecs_size_t size,
+    int32_t elem_count,
+    const ecs_type_info_t *ti);
+
+FLECS_API
+void ecs_vec_set_min_count_w_type_info(
+    struct ecs_allocator_t *allocator,
+    ecs_vec_t *vec,
+    ecs_size_t size,
+    int32_t elem_count,
+    const ecs_type_info_t *ti);
 
 FLECS_API
 void* ecs_vec_grow(

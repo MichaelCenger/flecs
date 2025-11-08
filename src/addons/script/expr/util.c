@@ -72,64 +72,12 @@ int flecs_value_unary(
     ecs_token_kind_t operator)
 {
     (void)script;
-    switch(operator) {
-    case EcsTokNot:
+
+    if (operator == EcsTokNot) {
         ecs_assert(expr->type == ecs_id(ecs_bool_t), ECS_INTERNAL_ERROR, NULL);
         ecs_assert(out->type == ecs_id(ecs_bool_t), ECS_INTERNAL_ERROR, NULL);
         *(bool*)out->ptr = !*(bool*)expr->ptr;
-        break;
-    case EcsTokEnd:
-    case EcsTokUnknown:
-    case EcsTokScopeOpen:
-    case EcsTokScopeClose:
-    case EcsTokParenOpen:
-    case EcsTokParenClose:
-    case EcsTokBracketOpen:
-    case EcsTokBracketClose:
-    case EcsTokMember:
-    case EcsTokComma:
-    case EcsTokSemiColon:
-    case EcsTokColon:
-    case EcsTokAssign:
-    case EcsTokAdd:
-    case EcsTokSub:
-    case EcsTokMul:
-    case EcsTokDiv:
-    case EcsTokMod:
-    case EcsTokBitwiseOr:
-    case EcsTokBitwiseAnd:
-    case EcsTokOptional:
-    case EcsTokAnnotation:
-    case EcsTokNewline:
-    case EcsTokEq:
-    case EcsTokNeq:
-    case EcsTokGt:
-    case EcsTokGtEq:
-    case EcsTokLt:
-    case EcsTokLtEq:
-    case EcsTokAnd:
-    case EcsTokOr:
-    case EcsTokMatch:
-    case EcsTokRange:
-    case EcsTokShiftLeft:
-    case EcsTokShiftRight:
-    case EcsTokAddAssign:
-    case EcsTokMulAssign:
-    case EcsTokIdentifier:
-    case EcsTokString:
-    case EcsTokNumber:
-    case EcsTokKeywordModule:
-    case EcsTokKeywordUsing:
-    case EcsTokKeywordWith:
-    case EcsTokKeywordIf:
-    case EcsTokKeywordElse:
-    case EcsTokKeywordFor:
-    case EcsTokKeywordIn:
-    case EcsTokKeywordMatch:
-    case EcsTokKeywordTemplate:
-    case EcsTokKeywordProp:
-    case EcsTokKeywordConst:
-    default:
+    } else {
         ecs_abort(ECS_INTERNAL_ERROR, "invalid operator for binary expression");
     }
 
@@ -138,8 +86,35 @@ int flecs_value_unary(
 
 #define ECS_VALUE_GET(value, T) (*(T*)(value)->ptr)
 
-#define ECS_BOP(left, right, result, op, R, T)\
+#define ECS_BOP_DO(left, right, result, op, R, T)\
     ECS_VALUE_GET(result, R) = (R)(ECS_VALUE_GET(left, T) op ECS_VALUE_GET(right, T))
+
+#define ECS_BOP(left, right, result, op, R, T)\
+    if ((result)->type == ecs_id(ecs_u64_t)) { \
+        ECS_BOP_DO(left, right, result, op, ecs_u64_t, T);\
+    } else if ((result)->type == ecs_id(ecs_u32_t)) { \
+        ECS_BOP_DO(left, right, result, op, ecs_u32_t, T);\
+    } else if ((result)->type == ecs_id(ecs_u16_t)) { \
+        ECS_BOP_DO(left, right, result, op, ecs_u16_t, T);\
+    } else if ((result)->type == ecs_id(ecs_u8_t)) { \
+        ECS_BOP_DO(left, right, result, op, ecs_u8_t, T);\
+    } else if ((result)->type == ecs_id(ecs_i64_t)) { \
+        ECS_BOP_DO(left, right, result, op, ecs_i64_t, T);\
+    } else if ((result)->type == ecs_id(ecs_i32_t)) { \
+        ECS_BOP_DO(left, right, result, op, ecs_i32_t, T);\
+    } else if ((result)->type == ecs_id(ecs_i16_t)) { \
+        ECS_BOP_DO(left, right, result, op, ecs_i16_t, T);\
+    } else if ((result)->type == ecs_id(ecs_i8_t)) { \
+        ECS_BOP_DO(left, right, result, op, ecs_i8_t, T);\
+    } else if ((result)->type == ecs_id(ecs_f64_t)) { \
+        ECS_BOP_DO(left, right, result, op, ecs_f64_t, T);\
+    } else if ((result)->type == ecs_id(ecs_f32_t)) { \
+        ECS_BOP_DO(left, right, result, op, ecs_f32_t, T);\
+    } else if ((result)->type == ecs_id(ecs_char_t)) { \
+        ECS_BOP_DO(left, right, result, op, ecs_char_t, T);\
+    } else {\
+        ecs_abort(ECS_INTERNAL_ERROR, "unexpected type in binary expression");\
+    }
 
 #define ECS_BOP_COND(left, right, result, op, R, T)\
     ECS_VALUE_GET(result, ecs_bool_t) = ECS_VALUE_GET(left, T) op ECS_VALUE_GET(right, T)
@@ -339,6 +314,7 @@ int flecs_value_binary(
     case EcsTokRange:
     case EcsTokIdentifier:
     case EcsTokString:
+    case EcsTokChar:
     case EcsTokNumber:
     case EcsTokKeywordModule:
     case EcsTokKeywordUsing:
@@ -349,6 +325,8 @@ int flecs_value_binary(
     case EcsTokKeywordIn:
     case EcsTokKeywordTemplate:
     case EcsTokKeywordMatch:
+    case EcsTokKeywordNew:
+    case EcsTokKeywordExport:
     case EcsTokKeywordProp:
     case EcsTokKeywordConst:
     default:
