@@ -16,7 +16,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{84F8AC4C-CFD1-3091-ADA8-858BD1E16508}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.22621.0</WindowsTargetPlatformVersion>
     <Platform>x64</Platform>
     <ProjectName>flecs_static</ProjectName>
     <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
@@ -55,21 +55,29 @@
       <AdditionalIncludeDirectories>$(ProjectDir)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <BufferSecurityCheck></BufferSecurityCheck>
-      <CallingConvention></CallingConvention>
+      <BufferSecurityCheck>
+      </BufferSecurityCheck>
+      <CallingConvention>
+      </CallingConvention>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>
       </ExceptionHandling>
-      <FloatingPointModel></FloatingPointModel>
-      <ForceConformanceInForLoopScope></ForceConformanceInForLoopScope>
+      <FloatingPointModel>
+      </FloatingPointModel>
+      <ForceConformanceInForLoopScope>
+      </ForceConformanceInForLoopScope>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
-      <MinimalRebuild></MinimalRebuild>
+      <MinimalRebuild>
+      </MinimalRebuild>
       <Optimization>Disabled</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <RemoveUnreferencedCodeData></RemoveUnreferencedCodeData>
+      <RemoveUnreferencedCodeData>
+      </RemoveUnreferencedCodeData>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <SupportJustMyCode></SupportJustMyCode>
-      <TreatWChar_tAsBuiltInType></TreatWChar_tAsBuiltInType>
+      <SupportJustMyCode>
+      </SupportJustMyCode>
+      <TreatWChar_tAsBuiltInType>
+      </TreatWChar_tAsBuiltInType>
       <UseFullPaths>false</UseFullPaths>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN64;_WINDOWS;flecs_STATIC;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
@@ -97,20 +105,28 @@
       <AdditionalIncludeDirectories>$(ProjectDir)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
-      <BufferSecurityCheck></BufferSecurityCheck>
-      <CallingConvention></CallingConvention>
+      <BufferSecurityCheck>
+      </BufferSecurityCheck>
+      <CallingConvention>
+      </CallingConvention>
       <ExceptionHandling>
       </ExceptionHandling>
-      <FloatingPointModel></FloatingPointModel>
-      <ForceConformanceInForLoopScope></ForceConformanceInForLoopScope>
+      <FloatingPointModel>
+      </FloatingPointModel>
+      <ForceConformanceInForLoopScope>
+      </ForceConformanceInForLoopScope>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
-      <MinimalRebuild></MinimalRebuild>
+      <MinimalRebuild>
+      </MinimalRebuild>
       <Optimization>MaxSpeed</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <RemoveUnreferencedCodeData></RemoveUnreferencedCodeData>
+      <RemoveUnreferencedCodeData>
+      </RemoveUnreferencedCodeData>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <SupportJustMyCode></SupportJustMyCode>
-      <TreatWChar_tAsBuiltInType></TreatWChar_tAsBuiltInType>
+      <SupportJustMyCode>
+      </SupportJustMyCode>
+      <TreatWChar_tAsBuiltInType>
+      </TreatWChar_tAsBuiltInType>
       <UseFullPaths>false</UseFullPaths>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN64;_WINDOWS;NDEBUG;flecs_STATIC;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
@@ -234,6 +250,7 @@
     <ClInclude Include="$(ProjectDir)\include\flecs\addons\meta_c.h" />
     <ClInclude Include="$(ProjectDir)\include\flecs\addons\metrics.h" />
     <ClInclude Include="$(ProjectDir)\include\flecs\addons\module.h" />
+    <ClInclude Include="$(ProjectDir)\include\flecs\addons\os_api_impl.h" />
     <ClInclude Include="$(ProjectDir)\include\flecs\addons\pipeline.h" />
     <ClInclude Include="$(ProjectDir)\include\flecs\addons\rest.h" />
     <ClInclude Include="$(ProjectDir)\include\flecs\addons\script.h" />
@@ -251,21 +268,19 @@
     <ClInclude Include="$(ProjectDir)\include\flecs\datastructures\sparse.h" />
     <ClInclude Include="$(ProjectDir)\include\flecs\datastructures\stack_allocator.h" />
     <ClInclude Include="$(ProjectDir)\include\flecs\datastructures\strbuf.h" />
-    <ClInclude Include="$(ProjectDir)\include\flecs\datastructures\switch_list.h" />
     <ClInclude Include="$(ProjectDir)\include\flecs\datastructures\vec.h" />
     <ClInclude Include="$(ProjectDir)\include\flecs\os_api.h" />
     <ClInclude Include="$(ProjectDir)\include\flecs\private\addons.h" />
     <ClInclude Include="$(ProjectDir)\include\flecs\private\api_defines.h" />
     <ClInclude Include="$(ProjectDir)\include\flecs\private\api_flags.h" />
+    <ClInclude Include="$(ProjectDir)\include\flecs\private\api_internals.h" />
     <ClInclude Include="$(ProjectDir)\include\flecs\private\api_support.h" />
     <ClInclude Include="$(ProjectDir)\include\flecs\private\api_types.h" />
-    <ClInclude Include="$(ProjectDir)\include\flecs\private\journal.h" />
-    <ClInclude Include="$(ProjectDir)\include\flecs\private\os_api_impl.h" />
     <ClCompile Include="$(ProjectDir)\src\addons\alerts.c" />
     <ClCompile Include="$(ProjectDir)\src\addons\app.c" />
     <ClCompile Include="$(ProjectDir)\src\addons\doc.c" />
     <ClCompile Include="$(ProjectDir)\src\addons\flecs_cpp.c" />
-    <ClCompile Include="$(ProjectDir)\src\addons\http.c" />
+    <ClCompile Include="$(ProjectDir)\src\addons\http\http.c" />
     <ClCompile Include="$(ProjectDir)\src\addons\journal.c" />
     <ClCompile Include="$(ProjectDir)\src\addons\json\deserialize.c" />
     <ClCompile Include="$(ProjectDir)\src\addons\json\deserialize_value.c" />
@@ -281,19 +296,23 @@
     <ClCompile Include="$(ProjectDir)\src\addons\json\serialize_value.c" />
     <ClCompile Include="$(ProjectDir)\src\addons\json\serialize_world.c" />
     <ClCompile Include="$(ProjectDir)\src\addons\log.c" />
-    <ClCompile Include="$(ProjectDir)\src\addons\meta\api.c">
-      <ObjectFileName>$(IntDir)/src/addons/meta/api.c.obj</ObjectFileName>
-    </ClCompile>
     <ClCompile Include="$(ProjectDir)\src\addons\meta\c_utils.c" />
     <ClCompile Include="$(ProjectDir)\src\addons\meta\cursor.c" />
     <ClCompile Include="$(ProjectDir)\src\addons\meta\definitions.c" />
     <ClCompile Include="$(ProjectDir)\src\addons\meta\meta.c" />
     <ClCompile Include="$(ProjectDir)\src\addons\meta\rtt_lifecycle.c" />
-    <ClCompile Include="$(ProjectDir)\src\addons\meta\serialized.c" />
+    <ClCompile Include="$(ProjectDir)\src\addons\meta\serializer.c" />
+    <ClCompile Include="$(ProjectDir)\src\addons\meta\type_support\array_ts.c" />
+    <ClCompile Include="$(ProjectDir)\src\addons\meta\type_support\enum_ts.c" />
+    <ClCompile Include="$(ProjectDir)\src\addons\meta\type_support\opaque_ts.c" />
+    <ClCompile Include="$(ProjectDir)\src\addons\meta\type_support\primitive_ts.c" />
+    <ClCompile Include="$(ProjectDir)\src\addons\meta\type_support\struct_ts.c" />
+    <ClCompile Include="$(ProjectDir)\src\addons\meta\type_support\units_ts.c" />
     <ClCompile Include="$(ProjectDir)\src\addons\metrics.c" />
     <ClCompile Include="$(ProjectDir)\src\addons\module.c" />
     <ClCompile Include="$(ProjectDir)\src\addons\os_api_impl\os_api_impl.c" />
     <ClCompile Include="$(ProjectDir)\src\addons\parser\tokenizer.c" />
+    <ClCompile Include="$(ProjectDir)\src\addons\pipeline\frame.c" />
     <ClCompile Include="$(ProjectDir)\src\addons\pipeline\pipeline.c" />
     <ClCompile Include="$(ProjectDir)\src\addons\pipeline\worker.c" />
     <ClCompile Include="$(ProjectDir)\src\addons\query_dsl\parser.c">
@@ -345,6 +364,7 @@
     <ClCompile Include="$(ProjectDir)\src\addons\script\visit_to_str.c">
       <ObjectFileName>$(IntDir)/src/addons/script/visit_to_str.c.obj</ObjectFileName>
     </ClCompile>
+    <ClCompile Include="$(ProjectDir)\src\addons\stats\memory.c" />
     <ClCompile Include="$(ProjectDir)\src\addons\stats\monitor.c" />
     <ClCompile Include="$(ProjectDir)\src\addons\stats\pipeline_monitor.c" />
     <ClCompile Include="$(ProjectDir)\src\addons\stats\stats.c" />
@@ -355,6 +375,8 @@
     <ClCompile Include="$(ProjectDir)\src\addons\timer.c" />
     <ClCompile Include="$(ProjectDir)\src\addons\units.c" />
     <ClCompile Include="$(ProjectDir)\src\bootstrap.c" />
+    <ClCompile Include="$(ProjectDir)\src\commands.c" />
+    <ClCompile Include="$(ProjectDir)\src\component_actions.c" />
     <ClCompile Include="$(ProjectDir)\src\datastructures\allocator.c" />
     <ClCompile Include="$(ProjectDir)\src\datastructures\bitset.c" />
     <ClCompile Include="$(ProjectDir)\src\datastructures\block_allocator.c" />
@@ -365,34 +387,35 @@
     <ClCompile Include="$(ProjectDir)\src\datastructures\sparse.c" />
     <ClCompile Include="$(ProjectDir)\src\datastructures\stack_allocator.c" />
     <ClCompile Include="$(ProjectDir)\src\datastructures\strbuf.c" />
-    <ClCompile Include="$(ProjectDir)\src\datastructures\switch_list.c" />
     <ClCompile Include="$(ProjectDir)\src\datastructures\vec.c" />
     <ClCompile Include="$(ProjectDir)\src\each.c" />
     <ClCompile Include="$(ProjectDir)\src\entity.c" />
     <ClCompile Include="$(ProjectDir)\src\entity_name.c" />
     <ClCompile Include="$(ProjectDir)\src\id.c" />
+    <ClCompile Include="$(ProjectDir)\src\instantiate.c" />
     <ClCompile Include="$(ProjectDir)\src\iter.c" />
     <ClCompile Include="$(ProjectDir)\src\misc.c" />
     <ClCompile Include="$(ProjectDir)\src\observable.c" />
     <ClCompile Include="$(ProjectDir)\src\observer.c" />
+    <ClCompile Include="$(ProjectDir)\src\on_delete.c" />
     <ClCompile Include="$(ProjectDir)\src\os_api.c" />
     <ClCompile Include="$(ProjectDir)\src\poly.c" />
-    <ClCompile Include="$(ProjectDir)\src\query\api.c">
-      <ObjectFileName>$(IntDir)/src/query/api.c.obj</ObjectFileName>
-    </ClCompile>
+    <ClCompile Include="$(ProjectDir)\src\query\api.c" />
+    <ClCompile Include="$(ProjectDir)\src\query\cache\cache.c" />
+    <ClCompile Include="$(ProjectDir)\src\query\cache\cache_iter.c" />
+    <ClCompile Include="$(ProjectDir)\src\query\cache\change_detection.c" />
+    <ClCompile Include="$(ProjectDir)\src\query\cache\group.c" />
+    <ClCompile Include="$(ProjectDir)\src\query\cache\match.c" />
+    <ClCompile Include="$(ProjectDir)\src\query\cache\order_by.c" />
     <ClCompile Include="$(ProjectDir)\src\query\compiler\compiler.c" />
     <ClCompile Include="$(ProjectDir)\src\query\compiler\compiler_term.c" />
-    <ClCompile Include="$(ProjectDir)\src\query\engine\cache.c" />
-    <ClCompile Include="$(ProjectDir)\src\query\engine\cache_iter.c" />
-    <ClCompile Include="$(ProjectDir)\src\query\engine\cache_order_by.c" />
-    <ClCompile Include="$(ProjectDir)\src\query\engine\change_detection.c" />
     <ClCompile Include="$(ProjectDir)\src\query\engine\eval.c" />
     <ClCompile Include="$(ProjectDir)\src\query\engine\eval_iter.c" />
     <ClCompile Include="$(ProjectDir)\src\query\engine\eval_member.c" />
     <ClCompile Include="$(ProjectDir)\src\query\engine\eval_pred.c" />
+    <ClCompile Include="$(ProjectDir)\src\query\engine\eval_sparse.c" />
     <ClCompile Include="$(ProjectDir)\src\query\engine\eval_toggle.c" />
     <ClCompile Include="$(ProjectDir)\src\query\engine\eval_trav.c" />
-    <ClCompile Include="$(ProjectDir)\src\query\engine\eval_union.c" />
     <ClCompile Include="$(ProjectDir)\src\query\engine\eval_up.c" />
     <ClCompile Include="$(ProjectDir)\src\query\engine\eval_utils.c" />
     <ClCompile Include="$(ProjectDir)\src\query\engine\trav_cache.c" />
@@ -403,13 +426,17 @@
       <ObjectFileName>$(IntDir)/src/query/util.c.obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="$(ProjectDir)\src\query\validator.c" />
+    <ClCompile Include="$(ProjectDir)\src\ref.c" />
     <ClCompile Include="$(ProjectDir)\src\search.c" />
     <ClCompile Include="$(ProjectDir)\src\stage.c" />
+    <ClCompile Include="$(ProjectDir)\src\storage\component_index.c" />
     <ClCompile Include="$(ProjectDir)\src\storage\entity_index.c" />
-    <ClCompile Include="$(ProjectDir)\src\storage\id_index.c" />
+    <ClCompile Include="$(ProjectDir)\src\storage\ordered_children.c" />
+    <ClCompile Include="$(ProjectDir)\src\storage\sparse_storage.c" />
     <ClCompile Include="$(ProjectDir)\src\storage\table.c" />
     <ClCompile Include="$(ProjectDir)\src\storage\table_cache.c" />
     <ClCompile Include="$(ProjectDir)\src\storage\table_graph.c" />
+    <ClCompile Include="$(ProjectDir)\src\type_info.c" />
     <ClCompile Include="$(ProjectDir)\src\value.c" />
     <ClCompile Include="$(ProjectDir)\src\world.c" />
   </ItemGroup>

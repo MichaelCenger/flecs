@@ -249,7 +249,7 @@ flecs_LIB_DEPENDS:STATIC=general;wsock32;general;ws2_32;
 flecs_SOURCE_DIR:STATIC=C:/Projects/Raidlead/RaidEngine/ThirdParty/Flecs
 
 //Dependencies for the target
-flecs_static_LIB_DEPENDS:STATIC=general;wsock32;general;ws2_32;
+flecs_static_LIB_DEPENDS:STATIC=general;wsock32;general;ws2_32;general;dbghelp;
 
 
 ########################
