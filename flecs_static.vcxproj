@@ -102,7 +102,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(ProjectDir)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Tracy\public;$(ProjectDir)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <BufferSecurityCheck>
@@ -129,7 +129,7 @@
       </TreatWChar_tAsBuiltInType>
       <UseFullPaths>false</UseFullPaths>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN64;_WINDOWS;NDEBUG;flecs_EXPORTS;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>TRACY_ENABLE;TRACY_IMPORTS;%(PreprocessorDefinitions);WIN64;_WINDOWS;NDEBUG;flecs_EXPORTS;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <DebugInformationFormat>
       </DebugInformationFormat>
@@ -150,6 +150,10 @@
     <Lib>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
     </Lib>
+    <Link>
+      <AdditionalDependencies>Profiler.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)RaidEngine\Shared\Profiler\Bin\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="$(ProjectDir)\include\flecs.h" />
@@ -440,7 +444,16 @@
     <ClCompile Include="$(ProjectDir)\src\value.c" />
     <ClCompile Include="$(ProjectDir)\src\world.c" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\Profiler\Profiler.vcxproj">
+      <Project>{87135aea-5926-4b02-b069-cb902e150398}</Project>
+      <Name>Profiler</Name>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <Private>false</Private>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

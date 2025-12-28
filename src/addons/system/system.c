@@ -4,6 +4,7 @@
  */
 
 #include "flecs.h"
+#include "tracy/TracyC.h"
 
 #ifdef FLECS_SYSTEM
 
@@ -104,6 +105,11 @@ ecs_entity_t flecs_run_system(
 
     ecs_run_action_t run = system_data->run;
     if (run) {
+// >>> RAID MOD START <<<
+// Add tracy instrumentation
+        TracyCZoneN(ctx, "SystemRun", 1);
+        TracyCZoneName(ctx, system_data->name, strlen(system_data->name));
+        
         /* If system query matches nothing, the system run callback doesn't have
          * anything to iterate, so the iterator resources don't get cleaned up
          * automatically, so clean it up here. */
@@ -117,6 +123,8 @@ ecs_entity_t flecs_run_system(
             }
             run(it);
         }
+        TracyCZoneEnd(ctx);
+// >>> RAID MOD END <<<
     } else {
         if (system_data->query->term_count) {
             if (it == &qit) {
